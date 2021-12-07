@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>spat cargo</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'dist/css/style.css' %}">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{% static 'https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css' %}">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+    <!-- JQVMap -->
+    <link rel="stylesheet" href="{% static 'plugins/jqvmap/jqvmap.min.css' %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %}">
+    <!-- summernote -->
+    <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css' %}">
+    <!--datatable-->
+
+    <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/select2/css/select2.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css' %}">
+    <!-- CodeMirror -->
+    <link rel="stylesheet" href="{% static 'plugins/codemirror/codemirror.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/codemirror/theme/monokai.css' %}">
+    <!-- SimpleMDE -->
+    <link rel="stylesheet" href="{% static 'plugins/simplemde/simplemde.min.css' %}">
+
+    <meta charset="UTF-8">
+    <style>
+        body{
+            font-size: 95%;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        table{ table-layout: fixed;}
+
+    </style>
+</head>
+<body>
+<h5 style="text-align: center"> SapatCargo - Просмотр расходника </h5>
+<br>
+<table width="100%">
+    <tr>
+        <td width="70%" align="center"><h5>Расходный кассовый ордер</h5></td>
+        <td width="30%">
+            <table width="100%" border="1">
+                <tr>
+                    <td align="center">Номер документа</td>
+                    <td align="center">Дата составления</td>
+                </tr>
+                <tr>
+                    <td align="center">{{ obj.pk }}</td>
+                    <td align="center">{{ obj.date|date:"c" }}</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+<p>Выдать: &nbsp;&nbsp;&nbsp;&nbsp;<B>({{ obj.employee.pk }}) {{ obj.employee.fullname }}, {{ obj.employee.phone }}</B></p>
+
+<p>Рейс №: &nbsp;&nbsp;&nbsp;<b>{{ obj.route.pk }} ({{ obj.route.country_recipient.name }})</b></p>
+
+<p>Сумма: &nbsp;&nbsp;&nbsp;&nbsp;<B>{{ obj.sum }} {{ obj.currency.name }}</B></p>
+
+<p>Описание: &nbsp;&nbsp;&nbsp;&nbsp;<B>{{ obj.description }} </B></p>
+<BR>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Сумма</th>
+        <th>Статья</th>
+        <th>Описание</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for ob in obj_inner %}
+        <tr>
+            <td>{{ ob.sum }} {{ obj.currency.name }}</td>
+            <td>{{ ob.article }}</td>
+            <td>{{ ob.note }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<BR><BR>
+<table width="100%">
+    <tr>
+        <td>Получил:</td>
+        <td width="95%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;"></div></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td width="95%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;"></div></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td width="95%">
+            <table>
+                <tr>
+                    <td><div style="margin: 20px 20px 0 20px;">"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" _______________ <?php print date("Y").'г.'; ?></div></td>
+                    <td><div style="margin: 20px 20px 0 20px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Подпись ___________________</div></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+<BR><BR><BR>
+<table width="100%">
+    <tr>
+        <td width="33%">Главный бухгалтер</td>
+        <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;"></div></td>
+        <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;"></div></td>
+    </tr>
+    <tr>
+        <td width="33%">Выдал кассир</td>
+        <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;"><b>{{ obj.added_by.first_name }}&nbsp;{{ obj.added_by.last_name }}</b></div></td>
+        <td width="33%"><div style="border-bottom: 1px solid #000; margin: 40px 20px 0 20px;"></div></td>
+    </tr>
+</table>
+</body>
+</html>

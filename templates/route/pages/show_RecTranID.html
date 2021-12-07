@@ -1,0 +1,325 @@
+{% extends base_template_name %}
+{% block css %}
+    <style type="text/css">
+        .table td, .table th
+        {
+            border:1px solid #000;
+            font-family: "Times New Roman", Times, serif;
+            font-size: 93%; /* Размер шрифта в процентах */
+        }
+    </style>
+{% endblock %}
+
+{% block content_header %}
+
+    <div class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h3 class="m-0">Список Актов Прием / Передач</h3>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'route:list_rt' %}">Список Актов Прием / Передач</a></li>
+                        <li class="breadcrumb-item active">Просмотр акта</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="card card-primary card-outline">
+        <div class="card-body">
+            <!--<table class="table">
+                <tr> <h4 align="center"><b> Д О Г О В О Р  №{{recTran.id}} </b></h4> </tr>
+                <tr> <h5 align="center"><b>организации перевозок грузов "Сапат Карго" </b></h5></tr>
+                <tr>
+                    <table class="table">
+                        <tr>
+                            <td> <b> Отправитель: {{ recTran.sender.fullname }} </b></td>
+                        </tr>
+                        <tr>
+                            <td> <b> 1. ПРЕДМЕТ ДОГОВОРА </b><br>
+                                1.1. ЗАКАЗЧИК поручает, а ИСПОЛНИТЕЛЬ принимает на себя обязательства по организации грузовых перевозок, по предварительным заявкам ЗАКАЗЧИКА, на перевозку груза воздушным транспортом и авто транспортом.
+                                <small><br> <b> 2. УСЛОВИЯ ПЕРЕВОЗКИ</b>
+                                <br>2.1. ЗАКАЗЧИК, если не оговорено других условий перевозки, доставляет груз на склад и/или до пункта назначения, согласованного с ИСПОЛНИТЕЛЕМ в накладной акта прием передачи.
+                                <br>2.2. Груз принимается к перевозке в исправной упаковке.
+                                <br>2.3. Исполнитель не принимает груз на перевозку товаров, относящихся к «Мировым Брендам», если в случае ЗАКАЗЧИК упакованным не скрытом ввиде передает груз к "Мировым Брендом",то за его не несет ответственность .
+                                <br>2.5. Место груза, имеющее вес более 60кг/0,126мкуб, считается «тяжеловесным», а так же груз от 5кг до 15кг/0,126мкуб, считается «габаритным» для авиатранспорта . Перевозка тяжеловесного и\или габаритного  груза, осуществляется только по предварительному согласованию с Исполнителем.
+                                <br><b> 3. ОБЯЗАННОСТИ СТОРОН</b>
+                                <br>3.1. ЗАКАЗЧИК обязан предоставить необходимую информацию об отправляемом грузе, указать количество мест, объем, вес, характер груза и в наличии копии патента,ИП,ОсОО.
+                                <br>3.2. ЗАКАЗЧИК обязан вместе с грузом предоставить необходимую информацию (адрес отправителя / получателя – паспорт резидента Российской Федераций или той страну получателя, контактный номер телефона получателя).
+                                Груз должен находиться в исправной упаковке, исключающей доступ к вложениям, имеющей транспортную маркировку, в соответствии с правилами перевозки грузов, и обеспечивающей сохранность вложений от внешних воздействий.
+                                <br>3.3. ИСПОЛНИТЕЛЬ обязуется довезти груз до пункта назначения на склад и передать получателю, указанному отправителем, при предоставлении последним удостоверяющие личность документы.
+                                <br>3.4. Исполнитель обязуется довезти груз до пункта назначения по фактическому (возможному) рейсу в случае Отмены/Смены рейса на который забронировано и оформлена накладная.
+                                <br>3.5. ИСПОЛНИТЕЛЬ обязуется исполнять настоящий Договор в сроки, указанные в накладных, а также надлежащим образом взятые на себя обязательства по настоящему договору.
+                                <br><b> 4. ПОРЯДОК РАСЧЕТОВ </b>
+                                <br>4.1. Оплата стоимости оказанных Услуг по настоящему Договору производится Заказчиком при отправке авиатранспортом и автотранспортом путем безналичной оплаты и/или внесением денежных средств в кассу ИСПОЛНИТЕЛЯ в следующем порядке :
+                                <br>4.1.1. ЗАКАЗЧИК оплачивает 70% от стоимости накладной  в день ее подписания;
+                                <br>4.1.2. оставшаяся часть в размере 30% от стоимости накладной оплачивается в течение 3-х рабочих дней со дня получения груза получаетелем авиатранспортом,а в течение 7-х рабочих дней со дня получения груза получаетелем автотранспортом .</small>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td> <b> Получатель: {{ recTran.recipient.fullname }} </b></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <small>4.2. Стоимость перевозки груза оговаривается в транспортной накладной на каждый заказ отдельно.
+                                <br>4.3. Отправка/Выдача груза откладывается до полного расчета Заказчиком услуг Исполнителя. В случае несвоевременной оплаты Исполнителя имеет право не выдавать/не отправлять груз, до 3-х дней. По истечении указанного срока, Исполнитель имеет право до выставить счет к оплате за каждый день хранения в размере 3000 сом или 3000 рублей.
+                                <br> <b> 5. ОТВЕТСТВЕННОСТЬ СТОРОН</b>
+                                <br>5.1. ЗАКАЗЧИК отвечает за правильность предоставляемой ИСПОЛНИТЕЛЮ информации, соответствие груза заявленному.
+                                <br>5.2. ИСПОЛНИТЕЛЬ несет ответственность за организацию транспортного процесса и отвечает перед ЗАКАЗЧИКОМ за груз до момента передачи груза получателю, указанным отправителем в накладной, согласно пункту
+                                3.3 настоящего договора.
+                                <br>5.3. При наступлении обстоятельств невозможности полного или частичного исполнения любой из сторон своих
+                                обязательств, а именно: стихийного бедствия, блокады, непогоды, эпидемий, гражданских волнений, выполнения
+                                авиакомпанией-перевозчиком правительственных заказов или других, независящих от сторон обстоятельств действия
+                                непреодолимой силы, препятствующих сторонам исполнить свои обязательства, сроки последних отодвигаются по
+                                времени, соизмеримо периоду, в течение которого будут действовать такие обстоятельства и их последствия.
+                                ИСПОЛНИТЕЛЬ информирует ЗАКАЗЧИКА о предстоящих изменениях.
+                                <br> 5.4. Сторона, для которой создалась невозможность исполнения своих обязательств по настоящему договору, должна немедленно известить об этом другую Сторону.
+                                <br> 5.5. Каждая из сторон вправе расторгнуть настоящий договор с предварительным уведомлением другой стороны за 30 дней до даты расторжения. Стороны обязуются произвести взаиморасчеты друг с другом до момента расторжения настоящего договора.
+                                <br> <b> 6. СРОК ДЕЙСТВИЯ ДОГОВОРА. ПРОЧИЕ УСЛОВИЯ.</b>
+                                <br>6.1. Настоящий договор действует с момента подписания его Сторонами и до 31 декабря 2021 г. при полном выполнении взаимных обязательств и расчетов.
+                                <br>6.2. Если ни одна из сторон письменно не заявит о прекращении настоящего договора за месяц до окончания его срока, то договор считается пролонгированным до 31 декабря года следующего за текущим. Количество продлений срока действия договора не ограничено.
+                                <br>6.3. Изменение, внесение дополнений в настоящий договор стороны производят путем подписания дополнительных соглашений к нему.
+                                    <br>6.4. Настоящий договор составлен в 2-х экземплярах, имеющих одинаковую юридическую силу по одному для каждой из сторон.</small>
+                                <table>
+                                    <tr>
+                                        <td width="50%" align="left">Оператор:                      {{ operator }}</td>
+                                        <td width="700px" align="left">Грузоотправитель:                        {{ sender }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left"> подпись: _________________</td>
+                                        <td align="left"> подпись: _________________</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                    </table>-->
+                <br>
+            <div id="first">
+                <tr> <td> <h5 align="center"> Акт приема-передачи товара </h5> </td> </tr>
+                <tr>
+                    <table width="95%" border="1" cellspacing="1" cellpadding="1">
+                        <tbody>
+                        <tr>
+                            <td align="center"><small><b>Наименование товара</b></small></td>
+                            <td align="center"><small><b>Код ТНВД</b></small></td>
+                            <td align="center"><small><b>№ сумки</b></small></td>
+                            <td align="center"><small><b>Кол..</b></small></td>
+                            <td align="center"><small><b>Вес</b></small></td>
+                        </tr>
+                        {% for p in products %}
+                            <tr>
+                                <td width="50%">
+                                    <small>{{ p.product.name|stringformat:".26s ...." }}</small>
+                                </td>
+                                <td align="center">
+                                    <small>{{ p.product.code }}</small>
+                                </td>
+                                <td align="center">
+                                    <small>{{ p.bag_number }}</small>
+                                </td>
+                                <td align="center">
+                                    <small>{{ p.count }}</small>
+                                </td>
+                                <td align="center">
+                                    <small>{{ p.weight }}</small>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td align="center" colspan="2"><small><b>Итого:</b></small></td>
+                            <td align="center"><b>{{ CounterBagNumber }}</b></td>
+                            <td align="center"><b>{{ SumCount }}</b></td>
+                            <td align="center"><b>{{ SumWeight }}</b></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </tr>
+
+                <br>
+                <tr><td> <h5 align="center"> Примечание: </h5> </td> </tr>
+                <tr>
+                    <table width="95%" border="1" cellspacing="1" cellpadding="1">
+                        <tbody><tr>
+                            <td align="center"><small><b>Услуги</b></small></td>
+                            <td align="center"><small><b>Кол..</b></small></td>
+                            <td align="center"><small><b>Цена({{ currency_recipient }})</b></small></td>
+                            <td align="center"><small><b>Цена(сом)</b></small></td>
+                            <td align="center"><small><b>Сумма({{ currency_recipient}})</b></small></td>
+                            <td align="center"><small><b>Сумма(сом)</b></small></td>
+                            <td align="center"><small><b>Оплата</b></small></td>
+                        </tr>
+
+                        {% for s in services %}
+                            <tr>
+                                <td><small>{{ s.service|stringformat:".11s..."  }}</small></td>
+                                <td align="right"><small>{{ s.count }}</small></td>
+                                <td align="right"><small>{{ s.priceIV }}</small></td>
+                                <td align="right"><small>{{ s.priceSom }}</small></td>
+                                <td align="right"><small>{{ s.SumPriceIV }}</small></td>
+                                <td align="right"><small>{{ s.SumPriceSom|stringformat:".2s" }}</small></td>
+                                <td align="center"><small>{{ s.status }}</small></td>
+                            </tr>
+
+                        {% endfor %}
+
+                        <tr>
+                            <td colspan="4" align="center"><small><b>Итого к оплате:</b><br><b>Остаток:</b></small></td>
+                            <td align="right" valign="bottom"><b>{{ remainder }} {{ currency_recipient }} </b></td>
+                            <td align="right" valign="top"><b>{{ TotalPayable }} сом</b></td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </tr>
+                <div id="date">
+                <tr>
+                    <br>
+                    <table>
+                        <tr>
+                            <td width="30%">Дата и время:</td>
+                            <td width="50%">{{recTran.dateRT}}</td>
+                        </tr>
+                    </table>
+                    <br>
+                    <div class="d-flex">
+                    <a href="{% url 'route:export_pdf' pk=recTranID %}"  class="btn btn-block btn-success" style="width: 100px;">
+                  <i class="fa fa-print"> </i>  Печать  </a>
+                 <button class="btn btn-block btn-success" style="width: 100px; margin: 0 0 0 20px;">{{recTran.registration}}</button>
+                </div>
+                </tr>
+                <br>
+                </div>
+            </div>
+
+            <div id="space">
+
+            </div>
+
+
+
+            <div id="second">
+                <tr> <td> <h5 align="center"> Акт приема-передачи товара </h5> </td> </tr>
+                <tr>
+                    <table width="95%" border="1" cellspacing="1" cellpadding="1">
+                        <tbody>
+                        <tr>
+                            <td align="center"><small><b>Наименование товара</b></small></td>
+                            <td align="center"><small><b>Код ТНВД</b></small></td>
+                            <td align="center"><small><b>№ сумки</b></small></td>
+                            <td align="center"><small><b>Кол..</b></small></td>
+                            <td align="center"><small><b>Вес</b></small></td>
+                        </tr>
+                        {% for p in products %}
+                            <tr>
+                                <td width="45%">
+                                    <small>{{ p.product.name|stringformat:".26s ...."}}</small>
+                                </td>
+                                <td align="center">
+                                    <small>{{ p.product.code }}</small>
+                                </td>
+                                <td align="center">
+                                    <small>{{ p.bag_number }}</small>
+                                </td>
+                                <td align="center">
+                                    <small>{{ p.count }}</small>
+                                </td>
+                                <td align="center">
+                                    <small>{{ p.weight }}</small>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td align="center" colspan="2"><small><b>Итого:</b></small></td>
+                            <td align="center"><small><b>{{ CounterBagNumber }}</b></small></td>
+                            <td align="center"><small><b>{{ SumCount }}</b></small></td>
+                            <td align="center"><small><b>{{ SumWeight }}</b></small></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </tr>
+
+                <br>
+                <tr><td> <h5 align="center"> Примечание: </h5> </td> </tr>
+                <tr>
+                    <table width="95%" border="1" cellspacing="1" cellpadding="1">
+                        <tbody><tr>
+                            <td align="center"><small><b>Услуги</b></small></td>
+                            <td align="center"><small><b>Кол..</b></small></td>
+                            <td align="center"><small><b>Цена({{ currency_recipient }})</b></small></td>
+                            <td align="center"><small><b>Цена(сом)</b></small></td>
+                            <td align="center"><small><b>Сумма({{ currency_recipient }})</b></small></td>
+                            <td align="center"><small><b>Сумма(сом)</b></small></td>
+                            <td align="center"><small><b>Оплата</b></small></td>
+                        </tr>
+
+                        {% for s in services %}
+                            <tr>
+                                <td> <small>{{ s.service|stringformat:".11s..."  }}</small></td>
+                                <td align="right"><small>{{ s.count }}</small></td>
+                                <td align="right"><small>{{ s.priceIV }}</small></td>
+                                <td align="right"><small>{{ s.priceSom }}</small></td>
+                                <td align="right"><small>{{ s.SumPriceIV }}</small></td>
+                                <td align="right"><small>{{ s.SumPriceSom }}</small></td>
+                                <td align="center"><small>{{ s.status }}</small></td>
+                            </tr>
+
+                        {% endfor %}
+
+                        <tr>
+                            <td colspan="4" align="center"><small><b>Итого к оплате:</b><br><b>Остаток:</b></small></td>
+                            <td align="right" valign="bottom"><small><b>{{ remainder }} {{ currency_recipient }} </b></small></td>
+                            <td align="right" valign="top"><small><b>{{ TotalPayable }} сом</b></small></td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </tr>
+
+            <div id="date2">
+                <tr>
+                    <br>
+                    <table>
+                        <tr>
+                            <td width="30%">Дата и время:</td>
+                            <td width="50%">{{recTran.dateRT}}</td>
+                        </tr>
+                    </table>
+                </tr>
+            </div>
+            </div>
+
+            </table>
+        </div>
+    </div>
+
+    <style>
+        #first {
+            width: 50%;
+            float: left;
+
+        }
+        #second{
+            width: 50%;
+            float: right;
+
+        }
+
+        #date {
+            width: 100%;
+            float: left;
+        }
+        #date2{
+            width: 100%;
+            float: left;
+        }
+    </style>
+{% endblock %}
+

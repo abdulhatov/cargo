@@ -1,0 +1,109 @@
+{% extends 'extends/index.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content_header %}
+
+    <div class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Оплата за погрузку</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item active">Оплата за погрузку</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <form method="post" id="form_id">
+        {% csrf_token %}
+        <div class="card card-primary card-outline">
+            <div class="card-body">
+
+                <div class="row">
+                    <div class="col-3">
+                        <label> Рейсы </label>
+                        {{ form.route }}
+                        {{ form.route.errors.as_ul }}
+                    </div>
+
+                    <div class="col-2">
+                        <label> Цена - Погрузка </label>
+                        {{ form.loading }}
+                        {{ form.loading.errors.as_ul  }}
+                    </div>
+
+                    <div class="col-auto">
+                        <label> Дата От </label>
+                        {{ form.dateFrom}}
+                        {{ form.dateFrom.errors.as_ul}}
+                    </div>
+
+                    <div class="col-auto">
+                        <label> Дата До </label>
+                        {{ form.dateTo }}
+                        {{ form.dateTo.errors.as_ul }}
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <input type="submit" class="btn btn-default" value="Показать" name="search"/>
+            </div>
+        </div>
+
+        {% if obj %}
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    <h3 class="card-title m-0"> Оплата за погрузку </h3>
+                </div>
+                <div class="card-body">
+                <p class="float-right"> {{ text }}</p>
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                        <th>№</th>
+                        <th>Сотрудник</th>
+                        <th>Итого</th>
+                        </thead>
+                        <tbody>
+                        {% for ob in obj %}
+                            <tr>
+                                <td>
+                                    {{ ob.0 }}
+                                </td>
+                                 <td>
+                                    {{ ob.1 }} &nbsp;
+                                    <i class="fa fa-eye" onclick="EmployeeInf('{% url 'financial:loading_pay_emp' ob.3 %}')"></i>
+                                </td>
+                                <td>
+                                    {{ ob.2 }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success" name="print">
+                        <i class="fa fa-print"></i>&nbsp; Печать
+                    </button>
+                </div>
+            </div>
+        {% endif %}
+    </form>
+{% endblock %}
+
+{% block js %}
+    <script>
+    function EmployeeInf(url) {
+        console.log(url);
+        $("#form_id").attr("action", url).submit();
+    }
+    </script>
+{% endblock %}

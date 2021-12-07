@@ -1,0 +1,124 @@
+{% extends base_template_name %}
+
+{% block content_header %}
+    <div class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h5 class="m-0">Просмотр перемещения по кассам</h5>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'financial:operations' %}">Список операций</a></li>
+                        <li class="breadcrumb-item active">Просмотр перемещения по кассам</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="card card-primary card-outline font_size">
+        <div class="card-body">
+            <table width="100%">
+                <tr>
+                    <td width="70%" valign="top">
+                        <table width="100%">
+                            <tr>
+                                <td width="70%" align="center"><h5>Приходный кассовый ордер</h5></td>
+                                <td width="30%">
+                                    <table width="100%" border="1">
+                                        <tr>
+                                            <td align="center">Номер документа</td>
+                                            <td align="center">Дата составления</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center">{{ obj.pk }}</td>
+                                            <td align="center">{{ obj.date|date:"c" }}</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                        <p>Принято от: &nbsp;&nbsp;&nbsp;&nbsp;<B>{{ obj.cash_sender.name }}</B></p>
+                        <p>Основание: &nbsp;&nbsp;&nbsp;&nbsp;<B> Перемещение денежных средств </B></p>
+                        <p>Сумма: &nbsp;&nbsp;&nbsp;&nbsp;<B>{{ obj.sum }} {{ obj.currency.name }}</B></p>
+                        <BR>
+                        <p>Примечание:</p>
+                        <p>{{ obj.description|safe }}</p>
+                        <BR><BR><BR>
+                        <table width="100%">
+                            <tr>
+                                <td width="33%">Главный бухгалтер</td>
+                                <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;"></div></td>
+                                <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;"></div></td>
+                            </tr>
+                            <tr>
+                                <td width="33%">Получил кассир</td>
+                                <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;">
+                                    {{ obj.added_by.first_name }}&nbsp;{{ obj.added_by.last_name }}
+                                </div></td>
+                                <td width="33%"><div style="border-bottom: 1px solid #000; margin: 40px 20px 0 20px;"></div></td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td width="30%" valign="top">
+                        <div style="border-left: 1px solid; border-left-style: dotted;margin-left: 10px;width: 100%;display: block; padding: 0px 10px;">
+                            <center>ОсОО "SapatCargo"</center><hr>
+                            <center><h4>Квитанция</h4></center>
+                            <center>к приходному кассовому ордеру</center>
+                            <center>№{{ obj.pk }} от {{ obj.date }}</center>
+                            <BR><BR>
+                            <p>Принято от: &nbsp;&nbsp;&nbsp;&nbsp;<B>{{ obj.cash_Sender.name }}</B></p>
+                            <p>Основание: &nbsp;&nbsp;&nbsp;&nbsp;<B>Перемещение денежных средств</B></p>
+                            <p>Сумма: &nbsp;&nbsp;&nbsp;&nbsp;<B>{{ obj.sum }} {{ obj.currency.name }}</B></p>
+                            <BR><BR><BR>
+                            <table width="100%">
+                                <tr>
+                                    <td colspan="2">Главный бухгалтер</td>
+                                </tr>
+                                <tr>
+                                    <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 0px;"></div></td>
+                                    <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 0px;"></div></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><BR>Получил кассир</td>
+                                </tr>
+                                <tr>
+                                    <td width="33%">
+                                        <div style="border-bottom: 1px solid #000; margin: 20px 20px 0 0px;">
+                                        {{ obj.added_by.first_name }}&nbsp;{{ obj.added_by.last_name }}
+                                    </div>
+                                    </td>
+                                    <td width="33%"><div style="border-bottom: 1px solid #000; margin: 40px 20px 0 0px;"></div></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <br>
+            {% if user.role == -1 %}
+                <a class="btn btn-success print"
+                   href="{% url 'financial:cons_cash_moving_print' obj.pk %}">
+                    <i class="fa fa-fw fa-print"></i> Печать
+                </a>
+
+            {% elif user.role == 1 or user.role == 6 or user.role == 3 or user.role == 4 %}
+                <div class="btn-group">
+                    <a class="btn btn-success print" href="{% url 'financial:cons_cash_moving_print' obj.pk %}"><i class="fa fa-fw fa-print"></i> Печать</a>
+                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a class="dropdown-item" href="{% url 'financial:cons_cash_moving_edit' obj.pk %}"><i class="fa fa-fw fa-edit"></i> Редактировать</a></li>
+                    </ul>
+                </div>
+                </div>
+            {% endif %}
+    </div>
+{% endblock %}

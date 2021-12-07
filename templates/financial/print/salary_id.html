@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>spat cargo</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'dist/css/style.css' %}">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{% static 'https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css' %}">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
+    <meta charset="UTF-8">
+    <style>
+         table.c {
+            table-layout: auto;
+            border: 1px solid black;
+             border-collapse: collapse;
+        }
+         body{
+             font-size: 90%;
+             font-family: 'Times New Roman', Times, serif;
+         }
+    </style>
+</head>
+<body>
+
+<h5 style="text-align: center"> Заработная плата </h5>
+{% if currency %}
+    <br>
+    <table class="c" border="1" width="50%">
+        <thead>
+        <th>Валюта</th>
+        <th>Курс</th>
+        </thead>
+        <tbody style="font-size: 90%">
+        {% for c in currency %}
+            <tr>
+                <td>
+                    {{ c.currency.name }}
+                </td>
+                <td>
+                    {{ c.curs }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <br>
+{% endif %}
+
+<h5 style="text-align: center"> c&nbsp;{{ salary.dateFrom }}&nbsp;по&nbsp;{{ salary.dateTo }} </h5>
+
+<table class="c" border="1" width="100%">
+    <thead>
+    <th>ФИО</th>
+    <th>долг (-) ,(+)</th>
+    <th>оклад</th>
+    <th>премии</th>
+    <th>прочее</th>
+    <th>проценты</th>
+    <th>досм./упак./порг.</th>
+    <th>Итого ЗП</th>
+    <th>Авансы</th>
+    <th>Штрафы</th>
+    <th>Остаток</th>
+    <th>Выдача</th>
+    <th>итого</th>
+    </thead>
+    <tbody id="id_tbody">
+    {% for i in inner %}
+        <tr>
+            <td> {{ i.employee.fullname }} </td>
+            <td> {{ i.debt }} </td>
+            <td> {{ i.oklad }} </td>
+            <td> {{ i.premiums }} </td>
+            <td> {{ i.other }} </td>
+            <td> {{ i.interest }} </td>
+            <td> {{ i.services }} </td>
+            <td> {{ i.totalSL }} </td>
+            <td> {{ i.advance }} </td>
+            <td> {{ i.fine }} </td>
+            <td> {{ i.remainder }} </td>
+            <td> {{ i.issuance }} </td>
+            <td> {{ i.total }} </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>

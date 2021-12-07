@@ -1,0 +1,102 @@
+{% extends 'extends/base.html' %}
+{% block menu %}
+    <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <li class="nav-item">
+                <a href="#" class="nav-link active">
+                    <i class="nav-icon fas fa-newspaper"></i>
+                    <p>
+                        Рейсы
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'route:list_route_url' %}" class="nav-link active">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Список</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'route:list_rt' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Прием/передача</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item menu">
+                <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-cash-register"></i>
+                    <p>
+                        Финансы
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'financial:cash_box' %}" class="nav-link active">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Кассы</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'financial:reports' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Отчет</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'financial:operations' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Операции</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <!--
+            <li class="nav-item menu">
+                <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-calculator"></i>
+                    <p>
+                        Дебитировка
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'debits:report' %}" class="nav-link active">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Отчет</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'debits:list_income' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Приходник</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'debits:clientReport' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Отчет по клиентам</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'debits:clientReport_tonnage' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Отчет по клиентам - Тоннаж</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'debits:agentofclient' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Контрагенты клиента</p>
+                        </a>
+                    </li>
+                </ul>
+            </li> -->
+        </ul>
+    </nav>
+{% endblock %}

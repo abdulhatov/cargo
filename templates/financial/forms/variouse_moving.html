@@ -1,0 +1,60 @@
+{% extends base_template_name %}
+{% load static %}
+{% load formset_tags %}
+{% load widget_tweaks %}
+{% block content_header %}
+    <div class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h4 class="m-0">{{ text }}</h4>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'financial:operations' %}">Список операций</a></li>
+                        <li class="breadcrumb-item active">{{ text }}</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <form method="POST">
+        <div class="card card-primary card-outline">
+            <div class="card-body">
+                <div class="row">
+                    {% csrf_token %}
+                    <!-- <div class="col-4"> <label class="required"> Дата </label> {{ form.date|add_class:"form-control" }} </div> -->
+                    <div class="col-4"> <label class="required"> Касса получатель </label> {{ form.cash|add_class:"form-control select2"}} </div>
+                    <div class="col-4"> <label class="required"> Касса отправитель </label> {{ form.cash_sender|add_class:"form-control select2" }} </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-4"> <label class="required"> Валюта </label> {{ form.currency|add_class:"form-control select2" }}</div>
+                    <div class="col-4"> <label class="required"> Сумма </label> {{ form.sum|add_class:"form-control" }}</div>
+                </div>
+                <br>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label> Описание </label>
+                        {{ form.description }}
+                    </div>
+                </div>
+
+                {% for hidden_field in form.hidden_fields %}
+                    {{ hidden_field }}
+                {% endfor %}
+
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-success"> Сохранить </button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

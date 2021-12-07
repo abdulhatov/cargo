@@ -1,0 +1,90 @@
+{% extends base_template_name %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content_header %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">{{ text }}</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'main:employees' %}">Список сотрудников</a></li>
+                        <li class="breadcrumb-item active">{{ text }}</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="card card-primary card-outline">
+        <form method="post">
+            <div class="card-body">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-3">
+                        <label class="required"> ID сотрудника </label>
+                        {{ form.employeeID|add_class:"form-control" }}
+                        {{ form.employeeID.errors.as_ul }}
+                    </div>
+
+                    <div class="col-4">
+                        <label class="required"> Полное имя </label>
+                        {{ form.fullname|add_class:"form-control" }}
+                        {{ form.fullname.errors.as_ul }}
+                    </div>
+
+                    <div class="col-4">
+                        <label class="required"> Должность </label>
+                        {{ form.role|add_class:"form-control select2" }}
+                        {{ form.role.errors.as_ul }}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-3">
+                        <label> Телефон </label>
+                        {{ form.phone|add_class:"form-control" }}
+                        {{ form.phone.errors.as_ul }}
+                    </div>
+
+                    <div class="col-3">
+                        <label> Адрес </label>
+                        {{ form.address|add_class:"form-control" }}
+                        {{ form.address.errors.as_ul }}
+                    </div>
+
+                    <div class="col-3">
+                        <label>Оклад </label>
+                        {{ form.salary|add_class:"form-control" }}
+                        {{ form.salary.errors.as_ul }}
+                    </div>
+
+                    <div class="col-2">
+                        <label> Валюта </label>
+                        {{ form.currency|add_class:"form-control select2" }}
+                        {{ form.currency.errors.as_ul }}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label> Дополнительная информация о сотруднике </label>
+                        {{ form.description }}
+                    </div>
+                </div>
+             {% for error in form.non_field_errors %}
+            <div class="errorlist">{{error}}</div>
+            {% endfor %}
+            </div>
+            <div class="card-footer">
+                <input type="submit" class="btn btn-success" value="Сохранить">
+            </div>
+        </form>
+    </div>
+{% endblock %}

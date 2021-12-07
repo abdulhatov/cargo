@@ -1,0 +1,204 @@
+{% extends base_template_name %}
+{% load static %}
+{% load formset_tags %}
+{% load widget_tweaks %}
+{% block css %}
+    <style> .font_size{ font-size: 92%; } </style>
+{% endblock %}
+{% block content_header %}
+    <div class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Просмотр расходника</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'financial:operations' %}">Список операций</a></li>
+                        <li class="breadcrumb-item active">Просмотр расходника</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <div class="card card-primary card-outline font_size">
+        <div class="card-body">
+            <table width="100%">
+                <tr>
+                    <td width="70%" align="center"><h5>Расходный кассовый ордер</h5></td>
+                    <td width="30%">
+                        <table width="100%" border="1">
+                            <tr>
+                                <td align="center">Номер документа</td>
+                                <td align="center">Дата составления</td>
+                            </tr>
+                            <tr>
+                                <td align="center">{{ obj.pk }}</td>
+                                <td align="center">{{ obj.date|date:"c" }}</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <p>Выдать: &nbsp;&nbsp;&nbsp;&nbsp;<B>
+                {% if obj.type2 == 4 %}
+                    ({{ obj.employee.pk }}) {{ obj.employee.fullname }} {% if obj.employee.phone %}, {{ obj.employee.phone }} {% endif %}
+                {% elif obj.type2 == 5 %}
+                    ({{ obj.agent.pk }}) {{ obj.agent.fullname }} {% if obj.agent.phone %} , {{ obj.agent.phone }} {% endif %}
+                {% elif obj.type2 == 6 %}
+                    ({{ obj.agent_client.pk }}) {{ obj.agent_client.fullname }} {% if obj.agent_client.phone %}, {{ obj.agent_client.phone }} {% endif %}
+                {% elif obj.type2 == 7 %}
+                    {{ obj.various }}
+                {% endif %}
+            </B></p>
+            {% if obj.route %} <p>Рейс №: &nbsp;&nbsp;&nbsp;<b> {{ obj.route.pk }} ({{ obj.route.country_recipient.name }})</b></p>{% endif %}
+
+            <p>Сумма: &nbsp;&nbsp;&nbsp;&nbsp;<B>{{ obj.sum }} {{ obj.currency.name }}</B></p>
+            <p>Описание: &nbsp;&nbsp;&nbsp;&nbsp;<B>{% if obj.description %}{{ obj.description|safe }} {% endif %}</B></p>
+            <BR>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Сумма</th>
+                    <th>Статья</th>
+                    <th>Описание</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for ob in obj_inner %}
+                    <tr>
+                        <td>{{ ob.sum }} {{ obj.currency.name }}</td>
+                        <td>{{ ob.article }}</td>
+                        <td> {% if ob.note %} {{ ob.note }}{% endif %} </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <BR><BR>
+            <table width="100%">
+                <tr>
+                    <td>Получил:</td>
+                    <td width="95%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;"></div></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td width="95%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;"></div></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td width="95%">
+                        <table>
+                            <tr>
+                                <td><div style="margin: 20px 20px 0 20px;">"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" _______________ <?php print date("Y").'г.'; ?></div></td>
+                                <td><div style="margin: 20px 20px 0 20px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Подпись ___________________</div></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <BR><BR><BR>
+            <table width="100%">
+                <tr>
+                    <td width="33%">Главный бухгалтер</td>
+                    <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;"></div></td>
+                    <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;"></div></td>
+                </tr>
+                <tr>
+                    <td width="33%">Выдал кассир</td>
+                    <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;">
+                        <b>{{ obj.added_by.first_name }}&nbsp;{{ obj.added_by.last_name }}
+                    </b></div></td>
+                    <td width="33%"><div style="border-bottom: 1px solid #000; margin: 40px 20px 0 20px;"></div></td>
+                </tr>
+            </table>
+            <BR>
+       {% if user.role == -1 %}
+
+                {% if obj.type2 == 4 %}
+                    <a class="btn btn-success print"
+                       href="{% url 'financial:cons_employee_print' obj.pk %}">
+                        <i class="fa fa-fw fa-print"></i> Печать
+                    </a>
+
+            {% elif obj.type2 == 5 %}
+                    <a class="btn btn-success print"
+                       href="{% url 'financial:cons_agent_print' obj.pk %}">
+                        <i class="fa fa-fw fa-print"></i> Печать
+                    </a>
+
+            {% elif obj.type2 == 6 %}
+                    <a class="btn btn-success print"
+                       href="{% url 'financial:cons_agent_client_print' obj.pk %}">
+                        <i class="fa fa-fw fa-print"></i> Печать
+                    </a>
+
+            {% elif obj.type2 == 7 %}
+                    <a class="btn btn-success print"
+                       href="{% url 'financial:cons_various_print' obj.pk %}">
+                        <i class="fa fa-fw fa-print"></i> Печать
+                    </a>
+            {% endif %}
+
+        {% elif user.role == 1 or user.role == 6 or user.role == 3 or user.role == 4 %}
+
+                {% if obj.type2 == 4 %}
+                <div class="btn-group">
+                    <a class="btn btn-success print" href="{% url 'financial:cons_employee_print' obj.pk %}"><i class="fa fa-fw fa-print"></i> Печать</a>
+                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a class="dropdown-item" href="{% url 'financial:cons_employee_edit' obj.pk %}"><i class="fa fa-fw fa-edit"></i> Редактировать</a></li>
+                    </ul>
+                </div>
+
+            {% elif obj.type2 == 5 %}
+                <div class="btn-group">
+                    <a class="btn btn-success print" href="{% url 'financial:cons_agent_print' obj.pk %}"><i class="fa fa-fw fa-print"></i> Печать</a>
+                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a class="dropdown-item" href="{% url 'financial:cons_agent_edit' obj.pk %}"><i class="fa fa-fw fa-edit"></i> Редактировать</a></li>
+                    </ul>
+                </div>
+
+            {% elif obj.type2 == 6 %}
+
+                <div class="btn-group">
+                    <a class="btn btn-success print" href="{% url 'financial:cons_agent_client_print' obj.pk %}"><i class="fa fa-fw fa-print"></i> Печать</a>
+                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a class="dropdown-item" href="{% url 'financial:cons_agent_client_edit' obj.pk %}"><i class="fa fa-fw fa-edit"></i> Редактировать</a></li>
+                    </ul>
+                </div>
+
+            {% elif obj.type2 == 7 %}
+                <div class="btn-group">
+                    <a class="btn btn-success print" href="{% url 'financial:cons_various_print' obj.pk %}"><i class="fa fa-fw fa-print"></i> Печать</a>
+                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a class="dropdown-item" href="{% url 'financial:cons_various_edit' obj.pk %}"><i class="fa fa-fw fa-edit"></i> Редактировать</a></li>
+                    </ul>
+                </div>
+
+            {% endif %}
+        {% endif %}
+
+        </div>
+    </div>
+{% endblock %}

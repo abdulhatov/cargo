@@ -1,0 +1,133 @@
+{% extends base_template_name %}
+{% block css %}
+    <style>
+        .font_size{font-size: 92%;}
+    </style>
+{% endblock %}
+{% block content_header %}
+    <div class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h6 class="m-0">Просмотр платежной ведомости</h6>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'financial:operations' %}">Список операций</a></li>
+                        <li class="breadcrumb-item active">Просмотр платежной ведомости</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="card card-primary card-outline font_size">
+        <div class="card-body">
+            <table width="100%">
+                <tr>
+                    <td colspan="3" width="100%" align="center"><h4>Платежная ведомость</h4></td>
+                </tr>
+                <tr>
+                    <td width="50%"></td>
+                    <td align="right">Номер документа: <b>{{ obj.pk }}</b></td>
+                    <td align="right">Дата составления: <b>{{ obj.date|date:"c" }}</b></td>
+                </tr>
+                <tr>
+                    <td width="50%" align="right">Сумма: &nbsp;&nbsp;&nbsp;&nbsp;<b>{{ obj.sum }} {{ obj.currency.name }}</b></td>
+                    <td align="right"></td>
+                    <td align="right"></td>
+                </tr>
+            </table>
+            <br>
+            <?php $i = 1; $summ = 0; ?>
+            <table border="1" width="100%">
+                <tr>
+                    <td>&nbsp;</td>
+                    <td colspan="5">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td><b>№</b></td>
+                    <td><b>Получатель</b></td>
+                    <td><b>Статья</b></td>
+                    <td><b>Сумма({{ obj.currency.name }})</b></td>
+                    <td><b>Подпись</b></td>
+                </tr>
+                {% for ob in obj_inner %}
+                    <tr>
+                        <td>{{ ob.pk }}</td>
+                        <td>
+                            {% if ob.inner.type2 == 8 %}
+                                {{ ob.agent.fullname }}
+                            {% elif ob.inner.type2 == 9 %}
+                                {{ ob.employee.fullname }}
+                            {% endif %}
+                        </td>
+                        <td>{{ obj.article.name }}</td>
+                        <td align="right">{{ ob.sum }} {{ obj.currency.name }}</td>
+                        <td></td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="2" align="center"><b>Итого:</b></td>
+                    <td></td>
+
+                    <td align="right"><b>{{ obj.sum }} {{ obj.currency.name }}</b></td>
+                    <td></td>
+                </tr>
+            </table>
+            <BR><BR><BR>
+            <table width="100%">
+                <tr>
+                    <td width="33%">Выдал кассир</td>
+                    <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;"><b>{{ obj.added_by.first_name }}&nbsp;{{ obj.added_by.last_name }}</b></div></td>
+                    <td width="33%"><div style="border-bottom: 1px solid #000; margin: 40px 20px 0 20px;"></div></td>
+                </tr>
+                <tr>
+                    <td width="33%">Главный бухгалтер</td>
+                    <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;"></div></td>
+                    <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;"></div></td>
+                </tr>
+            </table>
+            <BR>
+
+
+            {% if user.role == -1 %}
+                {% if obj.type2 == 8 %}
+                        <a class="btn btn-success print" href="{% url 'financial:ps_agent_print' obj.pk %}"><i class="fa fa-fw fa-print"></i> Печать</a>
+                 {% elif obj.type2 == 9 %}
+                        <a class="btn btn-success print" href="{% url 'financial:ps_emp_print' obj.pk %}"><i class="fa fa-fw fa-print"></i> Печать</a>
+                 {% endif %}
+
+            {% elif user.role == 1 or user.role == 6 or user.role == 3 or user.role == 4 %}
+
+            {% if obj.type2 == 8 %}
+                <div class="btn-group">
+                    <a class="btn btn-success print" href="{% url 'financial:ps_agent_print' obj.pk %}"><i class="fa fa-fw fa-print"></i> Печать</a>
+                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a class="dropdown-item" href="{% url 'financial:ps_agent_edit' obj.pk %}"><i class="fa fa-fw fa-edit"></i> Редактировать</a></li>
+                    </ul>
+                </div>
+            {% elif obj.type2 == 9 %}
+                <div class="btn-group">
+                    <a class="btn btn-success print" href="{% url 'financial:ps_emp_print' obj.pk %}"><i class="fa fa-fw fa-print"></i> Печать</a>
+                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a class="dropdown-item" href="{% url 'financial:ps_emp_edit' obj.pk %}"><i class="fa fa-fw fa-edit"></i> Редактировать</a></li>
+                    </ul>
+                </div>
+            {% endif %}
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}

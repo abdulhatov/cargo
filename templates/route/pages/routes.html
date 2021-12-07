@@ -1,0 +1,141 @@
+{% extends base_template_name %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content_header %}
+    <div class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Рейсы</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'main:home_page' %}"> Главная </a></li>
+                        <li class="breadcrumb-item active">Рейсы</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <script type="text/javascript">
+        var url = "{% url "route:change_location" %}";
+    </script>
+
+    <div class="card card-primary card-outline">
+        {% if user.role == 1 or user.role == 2 %}
+            <div class="card-header">
+                <a href="{% url 'route:create_route_url' %}"
+                   class="btn btn-block btn-success" style="width: 100px;"> Добавить </a>
+            </div>
+        {% endif %}
+        <div class="card-body">
+            <table class="table table-bordered table-hover" style="font-size: 90%">
+                <thead>
+                <tr>
+                    <th>ID рейса</th>
+                    <th>Страна</th>
+                    <th>Дата</th>
+                    <th>Статус</th>
+                    <th>Контрольный статус</th>
+                    <th>ID</th>
+                    <th>Местоположение </th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <form method="get">
+                        <td> {{ form.idRoute|add_class:"form-control" }}</td>
+                        <td> {{ form.country_recipient|add_class:"form-control" }}</td>
+                        <td> {{ form.date|add_class:"form-control" }}</td>
+                        <td> {{ form.status|add_class:"form-control p-lg-0" }} </td>
+                        <td> {{ form.control_status|add_class:"form-control p-lg-0" }}</td>
+                        <td> {{ form.id|add_class:"form-control" }}</td>
+                        <td> {{ form.location|add_class:"form-control p-lg-0" }}</td>
+                        <td align="center">
+                            <button class="btn btn-success" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </td>
+
+                    </form>
+                </tr>
+
+                {% for route in page_obj %}
+                    <tr>
+                        <td> {{ route.idRoute }}</td>
+                        <td> {{ route.country_recipient_name }}</td>
+                        <td> {{ route.date }}</td>
+                        <td>
+                            {% if route.status == True %}
+                                <span class="right badge badge-success"> открыт </span> </td>
+                            {% else %}
+                                <span class="right badge badge-danger"> закрыт </span> </td>
+                            {% endif %}
+                        <td>
+                            {% if route.control_status == True %}
+                                <span class="right badge badge-success"> открыт  </span> </td>
+                            {% else %}
+                                <span class="right badge badge-danger"> закрыт </span> </td>
+                            {% endif %}
+                        </td>
+
+                        <td> {{ route.pk }}</td>
+
+                        <td>
+                            <input type="button" value="{{ route.locaton }}"
+                                   onclick="change_location({{ route.pk }}, this);">
+                        </td>
+
+                        <td>
+                            {% if user.role == 1 or user.role == 6 or user.role == 5 or user.role == 2 %}
+                                <a href="{% url 'route:show_route_ID_url' pk=route.pk %}"> <i class="fa fa-eye"></i></a>
+                            {% endif %}
+                            {% if user.role == 1 or user.role == 2 %}
+                                <a href="{% url 'route:update_route_url' pk=route.pk %}"> <i class="fa fa-edit"></i></a>
+                                <a class="confirm-delete" href="{% url 'route:delete_route_url' pk=route.pk %}"> <i class="fa fa-trash-alt"></i></a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% include 'paginator.html' %}
+
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{% static "js/route/route_location.js" %}"></script>
+{% endblock %}
+
+
+

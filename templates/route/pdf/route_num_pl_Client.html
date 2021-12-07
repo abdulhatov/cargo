@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>spat cargo</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'dist/css/style.css' %}">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{% static 'https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css' %}">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
+    <meta charset="UTF-8">
+    <style>
+        table {
+            table-layout: auto;
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        body{
+            font-size: 90%;
+            font-family: 'Times New Roman', Times, serif;
+        }
+    </style>
+</head>
+<body>
+<br>
+<h5 style="text-align: center"> {{ routeInf }} </h5>
+
+<table border="1" width="100%">
+    <thead align="center">
+    <th>№</th>
+    <th>Код</th>
+    <th>Получатель</th>
+    <th>рынок</th>
+    <th>контейнер</th>
+    <th>ряд</th>
+    <th>Места</th>
+    <th>Вес</th>
+    <th>Сумма</th>
+    <th>Агент</th>
+    <th>Разгрузка</th>
+    </thead>
+    <tbody style="font-size: 90%">
+    {% for ob in obj %}
+        <tr>
+            {% for o in ob.0 %}
+                <td> {% if o %} {{ o }} {% endif %}</td>
+            {% endfor %}
+            <td>
+                <div>{{ ob.1.agent.value }}</div>
+            </td>
+            <td>
+                {{ ob.1.unloading.value }}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>

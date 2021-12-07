@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AmanatCargo</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'dist/css/style.css' %}">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{% static 'https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css' %}">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+    <!-- JQVMap -->
+    <link rel="stylesheet" href="{% static 'plugins/jqvmap/jqvmap.min.css' %}">
+
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %}">
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+    <!-- Bootstrap Color Picker -->
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css' %}">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{% static 'plugins/select2/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
+    <!-- Bootstrap4 Duallistbox -->
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css' %}">
+    <!-- BS Stepper -->
+    <link rel="stylesheet" href="{% static 'plugins/bs-stepper/css/bs-stepper.min.css' %}">
+    <!-- dropzonejs -->
+    <link rel="stylesheet" href="{% static 'plugins/dropzone/min/dropzone.min.css' %}">
+
+
+    <!--datatable-->
+
+    <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/select2/css/select2.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css' %}">
+    <!-- CodeMirror -->
+    <link rel="stylesheet" href="{% static 'plugins/codemirror/codemirror.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/codemirror/theme/monokai.css' %}">
+    <!-- SimpleMDE -->
+    <link rel="stylesheet" href="{% static 'plugins/simplemde/simplemde.min.css' %}">
+
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+    <!-- Bootstrap Color Picker -->
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css' %}">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{% static 'plugins/select2/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
+    <!-- Bootstrap4 Duallistbox -->
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css' %}">
+    <!-- BS Stepper -->
+    <link rel="stylesheet" href="{% static 'plugins/bs-stepper/css/bs-stepper.min.css' %}">
+    <!-- dropzonejs -->
+    <link rel="stylesheet" href="{% static 'plugins/dropzone/min/dropzone.min.css' %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+
+    <style>
+        .errorlist{ color: #dd4b39; font-size: 96%; }
+
+        .required2 label:after {
+            content:"*";
+            color:red;
+        }
+        .required:after {
+            content:"*";
+            color:red;
+        }
+        table.simple_table {
+            table-layout: auto;
+            width: 100%;
+            border: 1px solid #dee2e6;
+            font-size: 90%;
+        }
+        table.simple_table tbody td{
+            padding: 5px; /* Поля вокруг текста */
+        {#border: 1px solid #a52a2a; /* Граница вокруг ячеек */#}
+
+        }
+    </style>
+    {% block css %}
+    {% endblock %}
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+    <!-- Preloader
+    <div class="preloader">
+        <img src="{% static 'img/sc.png' %}" alt="AdminLTELogo" height="60" width="60">
+    </div>  -->
+
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <!-- Left navbar links -->
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="{% url 'main:home_page' %}" class="nav-link">Главная</a>
+            </li>
+        </ul>
+
+        <!-- Right navbar links -->
+        <ul class="navbar-nav ml-auto">
+
+            <li class="nav-item dropdown">
+                <a class="nav-link" data-toggle="dropdown" href="#">
+                   <span>
+                       {{ user.first_name }}&nbsp;{{ user.last_name }}&nbsp;
+                       <i class="fa fa-user-circle img-circle elevation-2" ></i>
+                   </span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                    <span class="dropdown-item dropdown-header">
+
+                        <img src="{% static 'img/photo.png' %}" class="img-circle" alt="User Image">
+                        <br>
+                        {{ user.first_name }}&nbsp;{{ user.last_name }}<br>
+                        {{ user.email }}
+                    </span>
+
+                    <div class="dropdown-divider"></div>
+                    <a href="{% url 'profile' user.pk %}" class="dropdown-item">
+                        <i class="fa fa-user-edit"></i> &nbsp;  Профиль
+                    </a>
+
+                    <div class="dropdown-divider"></div>
+                    <a href="{% url 'change_password' %}" class="dropdown-item">
+                        <i class="fa fa-exchange-alt"></i> &nbsp; Изменить пароль
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="{% url 'logout' %}" class="dropdown-item">
+                        <i class="fa fa-sign-out-alt"></i> &nbsp; Выйти</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                    <i class="fas fa-expand-arrows-alt"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <!-- /.navbar -->
+    {##}
+    {#    <!-- Main Sidebar Container -->#}
+    {#    <aside class="main-sidebar sidebar-dark-primary elevation-4">#}
+    {#        <!-- Brand Logo -->#}
+    {#        <a href="#" class="brand-link">#}
+    {#            <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">#}
+    {#            <span class="brand-text font-weight-light">AdminLTE 3</span>#}
+    {#        </a>#}
+    {##}
+    {#        <!-- Sidebar -->#}
+    {#        <div class="sidebar">#}
+    {#            <!-- Sidebar user panel (optional) -->#}
+    {#            <div class="user-panel mt-3 pb-3 mb-3 d-flex">#}
+    {#                <div class="image">#}
+    {#                    <img src="" class="img-circle elevation-2" alt="User Image">#}
+    {#                    <img src="{% static 'img/photo.png' %}" class="img-circle" alt="User Image">#}
+    {#                </div>#}
+    {#                <div class="info">#}
+    {#                    <a href="#" class="d-block">{{ user.email }}</a>#}
+    {#                </div>#}
+    {#            </div>#}
+    {##}
+    {#            <!-- SidebarSearch Form -->#}
+    {#            <div class="form-inline">#}
+    {#                <div class="input-group" data-widget="sidebar-search">#}
+    {#                    <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">#}
+    {#                    <div class="input-group-append">#}
+    {#                        <button class="btn btn-sidebar">#}
+    {#                            <i class="fas fa-search fa-fw"></i>#}
+    {#                        </button>#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#    </aside>#}
+
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <!-- Brand Logo -->
+        <a href="#" class="brand-link">
+            <div class="brand-text font-weight-light text-center">Amanat cargo</div>
+        </a>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <!-- Sidebar user panel (optional) -->
+            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                <div class="image">
+                    <img src="{% static 'img/photo.png' %}" class="img-circle elevation-2" alt="User Image">
+                </div>
+                <div class="info">
+                    <a href="#" class="d-block">{{ user.email }}</a>
+                </div>
+            </div>
+
+            <!-- SidebarSearch Form -->
+            <div class="form-inline">
+                <div class="input-group" data-widget="sidebar-search">
+                    <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+                    <div class="input-group-append">
+                        <button class="btn btn-sidebar">
+                            <i class="fas fa-search fa-fw"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% block menu %}
+            {% endblock %}
+        </div>
+        <!-- /.sidebar -->
+    </aside>
+
+    <div class="content-wrapper">
+
+        {% block  content_header %}
+            <div class="content-header">
+                <div class="container-fluid">
+
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">Панель инструментов</h1>
+                        </div><!-- /.col -->
+
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+        {% endblock %}
+
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+
+
+                {% for message in messages %}
+                    <div class="container-fluid p-0">
+                        <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            {{ message }}
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <div class="row">
+                    <div class="col">
+                        {% block content %}
+                            <div class="row">
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <div class="info-box">
+                                        <span class="info-box-icon bg-info elevation-1"><i class="fas fa-clipboard-list"></i></span>
+
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Создано Актов</span>
+                                            <span class="info-box-number"> {{ rt }} </span>
+                                        </div>
+                                    </div>
+                                    <!-- /.info-box -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-12 col-sm-8 col-md-4">
+                                    <div class="info-box mb-3">
+                                        <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-user-alt"></i></span>
+
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Грузополучателей</span>
+                                            <span class="info-box-number">{{ recipient }}</span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                    <!-- /.info-box -->
+                                </div>
+                                <!-- /.col -->
+
+                                <!-- fix for small devices only -->
+                                <div class="clearfix hidden-md-up"></div>
+
+                                <div class="col-12 col-sm-8 col-md-4">
+                                    <div class="info-box mb-3">
+                                        <span class="info-box-icon bg-success elevation-2"><i class="fas fa-user"></i></span>
+
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Грузоотправителей</span>
+                                            <span class="info-box-number">{{ sender }}</span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                    <!-- /.info-box -->
+                                </div>
+                            </div>
+                            <div class="row">
+                                <!-- /.col -->
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <div class="info-box mb-3">
+                                        <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-bus"></i></span>
+
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Рейсы</span>
+                                            <span class="info-box-number">{{ route }}</span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                    <!-- /.info-box -->
+                                </div>
+                                <!-- /.col -->
+                            </div>
+
+                        {% endblock %}
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <footer class="main-footer py-2 text-center">
+        <strong>Made with <i class="fa fa-heart text-danger"></i> <a href="https://odigital.app" target="_blank">Oracle Digital</a></strong>
+    </footer>
+
+</div>
+<!-- jQuery -->
+<script src="{% static 'dist/js/main_js/add.js' %}"></script>
+<script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="{% static 'plugins/jquery-ui/jquery-ui.min.js' %}"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+    $.widget.bridge('uibutton', $.ui.button)
+</script>
+<!-- Tooltip -->
+<script src="{% static 'plugins/popper/umd/popper.min.js.map' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- ChartJS -->
+<script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
+<!-- Sparkline -->
+<script src="{% static 'plugins/sparklines/sparkline.js' %}"></script>
+<!-- JQVMap -->
+<script src="{% static 'plugins/jqvmap/jquery.vmap.min.js' %}"></script>
+<script src="{% static 'plugins/jqvmap/maps/jquery.vmap.usa.js' %}"></script>
+<!-- jQuery Knob Chart -->
+<script src="{% static 'plugins/jquery-knob/jquery.knob.min.js' %}"></script>
+<!-- daterangepicker -->
+<script src="{% static 'plugins/moment/moment.min.js' %}"></script>
+<script src="{% static 'plugins/daterangepicker/daterangepicker.js' %}"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="{% static 'plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+<!-- Summernote -->
+<script src="{% static 'plugins/summernote/summernote-bs4.min.js' %}"></script>
+<!-- overlayScrollbars -->
+<script src="{% static 'plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'dist/js/adminlte.js' %}"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="{% static 'dist/js/demo.js' %}"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="{% static 'dist/js/pages/dashboard.js' %}"></script>
+
+<!-- Select2 -->
+<script src="{% static 'plugins/select2/js/select2.full.min.js' %}"></script>
+
+<!-- DataTables  & Plugins -->
+<script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+<script src="{% static 'plugins/select2/js/select2.full.min.js' %}"></script>
+
+<script src="{% static 'plugins/summernote/summernote-bs4.min.js' %}"></script>
+<!-- CodeMirror -->
+<script src="{% static 'plugins/codemirror/codemirror.js' %}"></script>
+<script src="{% static 'plugins/codemirror/mode/css/css.js' %}"></script>
+<script src="{% static 'plugins/codemirror/mode/xml/xml.js' %}"></script>
+<script src="{% static 'plugins/codemirror/mode/htmlmixed/htmlmixed.js' %}"></script>
+<script src="{% static "smart-selects/admin/js/chainedfk.js" %}"></script>
+<script src="{% static "smart-selects/admin/js/bindfields.js" %}"></script>
+
+<!-- Bootstrap Switch -->
+<script src="{%  static 'plugins/bootstrap-switch/js/bootstrap-switch.min.js' %}"></script>
+
+<!-- page script -->
+<script>
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2()
+
+        //Initialize Select2 Elements
+        $('.select2bs4').select2({
+            theme: 'bootstrap4'
+        })
+
+        $("input[data-bootstrap-switch]").each(function(){
+            $(this).bootstrapSwitch('state', $(this).prop('checked'));
+        })
+        jQuery(function () {
+            jQuery("#example1").DataTable({
+                "paging": true,
+                "lengthMenu": [4],
+                "lengthChange": false,
+                "searching": true,
+                "oLanguage": {
+                    "sSearch": "Поиск",
+                    "oPaginate": {
+                        "sFirst": "Первая страница",
+                        "sPrevious": "<",
+                        "sNext": ">",
+                        "sLast": "Последняя страница"
+                    },
+                },
+                "ordering": true,
+                "info": true,
+                "autoWidth": true,
+                "language": {
+                    "info": "Записи с _START_ по _END_ из _TOTAL_ записей",
+                },
+                "responsive": true, "lengthChange": false, "autoWidth": false,
+                "buttons": [{extend: 'print', text: 'Печать'}]
+
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)').ext.pager.numbers_length = 2;
+        });
+        // Summernote
+        $('#summernote').summernote()
+
+        // CodeMirror
+        CodeMirror.fromTextArea(document.getElementById("codeMirrorDemo"), {
+            mode: "htmlmixed",
+            theme: "monokai"
+        });
+
+    })
+
+    $(document).on('click', '.confirm-delete', function () {
+        return confirm('Вы уверены, что хотите удалить этот элемент?');
+    });
+</script>
+
+{% block js %}
+{% endblock %}
+
+</body>
+</html>
+

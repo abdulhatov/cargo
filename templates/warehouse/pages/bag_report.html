@@ -1,0 +1,89 @@
+{% extends 'extends/index.html' %}
+
+{% block css %}
+    {% load static %}
+    {% load widget_tweaks %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="{% static "js/warehouse/warehouse_report.js" %}"></script>
+{% endblock %}
+
+{% block content_header %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h3 class="m-0">Отчет по мешкам склада</h3>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item active">Отчет по мешкам склада</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <script type="text/javascript">
+        var url = "{% url 'warehouse:ajax_load_routes' %}";
+    </script>
+
+    <form  method="post">
+        <div class="card card-primary card-outline">
+            <div class="card-body align-center">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-3"> <label> Склад </label>{{ form.warehouse|add_class:"form-control" }} </div>
+                    <div class="col-3"> <label> Операция </label>{{ form.operation|add_class:"form-control" }} </div>
+                    <div class="col-3"> <label> Дата ОТ </label>{{ form.dateFrom|add_class:"form-control" }} </div>
+                    <div class="col-3"> <label> Дата ДО </label>{{ form.dateTo|add_class:"form-control" }} </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-3"> <label> Направление </label>{{ form.direction|add_class:"form-control" }} </div>
+                    <div class="col-3"> <label> Рейс От </label>{{ form.routeFrom|add_class:"form-control" }}</div>
+                    <div class="col-3"> <label> Рейс До </label>{{ form.routeTo|add_class:"form-control" }}</div>
+                </div>
+                <br>
+                <button type="submit" name="submit_button" class="btn btn-default"> Показать </button>
+            </div>
+        </div>
+        {% if text %}
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    <h3 class="card-title m-0"> Отчет по складам </h3>
+                    <button type="submit" class="btn btn-success float-right" name="print_button">
+                        <i class="fa fa-print"> </i>  Печать
+                    </button>
+                </div>
+
+                <div class="card-body">
+
+                    <p style="text-align: center;"> {{ text }} </p>
+
+                    <table class="table table-striped table-bordered" id="tableId">
+                        <thead>
+                        <tr>
+                            {% for h in header %}
+                                <th align="center">{{ h }}</th>
+                            {% endfor %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for i in obj %}
+                            <tr>
+                                {% for j in i %}
+                                    <td> {{ j }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+    </form>
+{% endblock %}

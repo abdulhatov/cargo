@@ -1,0 +1,78 @@
+{% extends 'extends/index.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content_header %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Список складов</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item active">Список складов</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <a href="{% url 'warehouse:warehouse_add' %}">
+                <button type="button" class="btn btn-success">Добавить </button>
+            </a>
+        </div>
+
+        <div class="card-body">
+           <table class="table table-bordered table-hover" style="font-size: 90%">
+                <thead>
+                <tr>
+                    <th>ID </th>
+                    <th>Название</th>
+                    <th>Описание</th>
+                    <th> </th>
+                </tr>
+
+                <tr>
+                    <form method="get">
+                        <td>{{ form.id|add_class:"form-control" }}</td>
+                        <td>{{ form.title|add_class:"form-control" }}</td>
+                        <td>{{ form.content|add_class:"form-control" }}</td>
+                        <td align="center">
+                            <button class="btn btn-success" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </td>
+                    </form>
+                </tr>
+
+                </thead>
+                <tbody>
+                    {% for i in page_obj %}
+                        <tr>
+                            <td> {{ i.id }}</td>
+                            <td> {{ i.title }}</td>
+                            <td> {{ i.content|safe }}</td>
+                            <td>
+                                <a href="{% url 'warehouse:warehouse_update' i.id %}">
+                                    <i class="fa fa-edit"></i></a> &nbsp;
+                                <a class="confirm-delete" href="{% url 'warehouse:warehouse_delete' i.id %}">
+                                    <i class="fa fa-trash-alt"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+    {% include 'paginator.html' %}
+
+    </div>
+{% endblock %}

@@ -1,0 +1,222 @@
+{% extends base_template_name %}
+{% load static %}
+{% load formset_tags %}
+{% load widget_tweaks %}
+{% block css %}
+        <style>
+        table {
+            background-color: transparent;
+        }
+
+        table {
+            border-spacing: 0;
+            border-collapse: collapse;
+        }
+    </style>
+
+{% endblock %}
+{% block content_header %}
+    <div class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Просмотр приходника</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'financial:operations' %}">Список операций</a></li>
+                        <li class="breadcrumb-item active">Просмотр приходника</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <div class="card card-primary card-outline font_size">
+        <div class="card-body">
+            <table width="100%">
+                <tr>
+                    <td width="70%" valign="top">
+                        <table width="100%">
+                            <tr>
+                                <td width="70%" align="center"><h5>Приходный кассовый ордер</h5></td>
+                                <td width="30%">
+                                    <table width="100%" border="1">
+                                        <tr>
+                                            <td align="center">Номер документа</td>
+                                            <td align="center">Дата составления</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center">{{ obj.pk }}</td>
+                                            <td align="center">{{ obj.date|date:"c" }}</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                        <p>Принято от: &nbsp;&nbsp;&nbsp;&nbsp;<B>
+                            {% if obj.type2 == 1 %}
+                                ({{ obj.client.pk }}) {{ obj.client.fullname }}
+                                {% if obj.client.phone %}, {{ obj.client.phone }}{% endif %}
+                            {% elif obj.type2 == 2 %}
+                                ({{ obj.agent.pk }}) {{ obj.agent.fullname }}
+                                {% if obj.agent.phone %} , {{ obj.agent.phone }}{% endif %}
+                            {% elif obj.type2 == 3 %}
+                                {{ obj.various }}
+                            {% endif %}
+                        </B></p>
+
+                        <p>Рейс №: &nbsp;&nbsp;&nbsp;<b>{% if obj.route %}
+                            {{ obj.route.pk }} ({{ obj.route.country_recipient.name }}){% endif %}</b></p>
+
+                        <p>Основание: &nbsp;&nbsp;&nbsp;&nbsp;<B>{{ obj.article.name }}</B></p>
+                        <p>Сумма: &nbsp;&nbsp;&nbsp;&nbsp;<B>{{ obj.sum }} {{ obj.currency.name }}</B></p>
+                        <BR>
+                        <p>Примечание: &nbsp;&nbsp;&nbsp;&nbsp;<B>{{ obj.description|safe }}</B></p>
+
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Чек</th>
+                                <th>Код клиента</th>
+                                <th>Рейс</th>
+                                <th>Сумма</th>
+                                <th>Статья</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for ob in obj_inner %}
+                                <tr>
+                                    <td>{% if ob.check %}{{ ob.check }}{% endif %}</td>
+                                    <td> {% if ob.check %}
+                                        ({{ ob.client.pk }}) {{ ob.client.fullname }} , {{ ob.client.phone }}
+                                    {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if ob.route %}
+                                            {{ ob.route.pk }} ({{ ob.route.country_recipient.name }})
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ ob.sum }} {{ obj.currency.name }}</td>
+                                    <td>{{ ob.article.name }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <BR><BR><BR>
+                        <table width="100%">
+                            <tr>
+                                <td width="33%">Главный бухгалтер</td>
+                                <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;"></div></td>
+                                <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;"></div></td>
+                            </tr>
+                            <tr>
+                                <td width="33%">Получил кассир</td>
+                                <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;">
+                                    {{ obj.added_by.first_name }}&nbsp;
+                                        {{ obj.added_by.last_name }}
+                                </div></td>
+                                <td width="33%"><div style="border-bottom: 1px solid #000; margin: 40px 20px 0 20px;"></div></td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td width="30%" valign="top">
+                        <div style="border-left: 1px solid; border-left-style: dotted;margin-left: 10px;width: 100%;display: block; padding: 0px 10px;">
+                            <center>ОсОО "SapatCargo"</center><hr>
+                            <center><h4>Квитанция</h4></center>
+                            <center>к приходному кассовому ордеру</center>
+                            <center>№{{ obj.pk }} от {{ obj.date|date:"c" }}</center>
+                            <BR><BR>
+                            <p>Принято от: &nbsp;&nbsp;&nbsp;&nbsp;<B>
+                                {% if obj.type2 == 1 %}
+                                    ({{ obj.client.pk }}) {{ obj.client.fullname }}
+                                    {% if obj.client.phone %}, {{ obj.client.phone }}{% endif %}
+                                {% elif obj.type2 == 2 %}
+                                    ({{ obj.agent.pk }}) {{ obj.agent.fullname }}
+                                    {% if obj.agent.phone %} , {{ obj.agent.phone }}{% endif %}
+                                {% elif obj.type2 == 3 %}
+                                    {{ obj.various }}
+                                {% endif %}
+                            </B></p>
+
+                            <p>Рейс №: &nbsp;&nbsp;&nbsp;<b>{% if obj.route %}{{ obj.route.pk }} ({{ obj.route.country_recipient.name }}){% endif %}</b></p>
+
+                            <p>Основание: &nbsp;&nbsp;&nbsp;&nbsp;<B>{{ obj.article.name }}</B></p>
+                            <p>Сумма: &nbsp;&nbsp;&nbsp;&nbsp;<B>{{ obj.sum }} {{ obj.currency.name }}</B></p>
+                            <BR><BR><BR>
+                            <table width="100%">
+                                <tr>
+                                    <td colspan="2">Главный бухгалтер</td>
+                                </tr>
+                                <tr>
+                                    <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 0px;"></div></td>
+                                    <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 0px;"></div></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><BR>Получил кассир</td>
+                                </tr>
+                                <tr>
+                                    <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 0px;">
+                                        {{ obj.added_by.first_name }}&nbsp;
+                                        {{ obj.added_by.last_name }}
+                                    </div></td>
+                                    <td width="33%"><div style="border-bottom: 1px solid #000; margin: 40px 20px 0 0px;"></div></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <br>
+
+            {% if user.role == -1 %}
+                <a class="btn btn-success print" href="{% url 'financial:operations_income_print' obj.pk %}">
+                            <i class="fa fa-fw fa-print"></i> Печать
+                        </a>
+            {% elif user.role == 1 or user.role == 6 or user.role == 3 or user.role == 4 %}
+                {% if obj.type2 == 1 %}
+                    <div class="btn-group">
+                        <a class="btn btn-success print" href="{% url 'financial:operations_income_print' obj.pk %}">
+                            <i class="fa fa-fw fa-print"></i> Печать
+                        </a>
+                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a class="dropdown-item" href="{% url 'financial:operations_in_client_edit' obj.pk %}">
+                                <i class="fa fa-fw fa-edit"></i> Редактировать</a></li>
+                        </ul>
+                    </div>
+                {% elif obj.type2 == 2 %}
+                    <div class="btn-group">
+                        <a class="btn btn-success print" href="{% url 'financial:operations_income_print' obj.pk %}"><i class="fa fa-fw fa-print"></i> Печать</a>
+                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a class="dropdown-item" href="{% url 'financial:operations_in_agent_edit' obj.pk %}"><i class="fa fa-fw fa-edit"></i> Редактировать</a></li>
+                        </ul>
+                    </div>
+                {% elif obj.type2 == 3 %}
+                    <div class="btn-group">
+                        <a class="btn btn-success print" href="{% url 'financial:operations_income_print' obj.pk %}"><i class="fa fa-fw fa-print"></i> Печать</a>
+                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a class="dropdown-item" href="{% url 'financial:operations_in_various_edit' obj.pk %}"><i class="fa fa-fw fa-edit"></i> Редактировать</a></li>
+                        </ul>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends base_template_name %}
+{% load static %}
+{% load formset_tags %}
+{% load widget_tweaks %}
+{% block content_header %}
+    <div class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">{{ text }}</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'debits:agentofclient' %}"> Список контрагентов </a></li>
+                        <li class="breadcrumb-item active">{{ text }}</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <form method="POST">
+        <div class="card card-primary card-outline">
+            <div class="card-body">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-4">
+                        <label class="required"> Полное имя </label>
+                        {{ form.fullname}}
+                        {{ form.fullname.errors.as_ul }}
+
+                    </div>
+                    <div class="col-4">
+                        <label class="required"> Страна </label>
+                        {{ form.country|add_class:"select2" }}
+                        {{ form.country.errors.as_ul }}
+                    </div>
+                    <div class="col-4">
+                        <label> Рынок </label>
+                        {{ form.store}}
+                        {{ form.store.errors.as_ul }}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-4">
+                        <label> Телефон </label>
+                        {{ form.phone }}
+                        {{ form.phone.errors.as_ul }}
+                    </div>
+                    <div class="col-4">
+                        <label> Адрес </label>
+                        {{ form.address }}
+                        {{ form.address.errors.as_ul }}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label> Описание </label>
+                        {{ form.more_info }}
+                        {{ form.more_info.errors.as_ul }}
+                    </div>
+                </div>
+
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-success"> Сохранить </button>
+            </div>
+        </div>
+    </form>
+    <script>
+        $('#summernote').summernote()
+    </script>
+{% endblock %}

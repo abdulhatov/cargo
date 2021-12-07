@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>spat cargo</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'dist/css/style.css' %}">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{% static 'https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css' %}">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
+    <meta charset="UTF-8">
+    <style>
+        body{
+            font-size: 95%;
+            font-family: "Times New Roman", Times, serif; }
+
+        table{
+            table-layout: auto;
+            border-collapse: collapse;
+        }
+    </style>
+
+</head>
+<body>
+<h5 align="center"> {{ routeInf }} </h5>
+    <table width="100%" border="1">
+        <tbody>
+        <tr>
+            <td align="center" width="3%"><b>код</b></td>
+            <td align="center"><b>Рынок</b></td>
+            <td align="center" width="20%"><b>Получатель</b></td>
+            <td align="center" width="25%"><b>наименование</b></td>
+            <td align="center" width="7%"><b>кол-во</b></td>
+            <td align="center"width="7%"><b>вес</b></td>
+            <td align="center" width="7%"><b>№сумки</b></td>
+            <td align="center" width="22%"><b>Отправитель</b></td>
+        </tr>
+        {% for rt in RT %}
+            <tr class="lines">
+                <td width="3%" align="center" valign="top" class="client_id">
+                    {{ rt.recTran.recipient.pk }}
+                </td>
+                <td align="center" valign="top">
+                    {% if rt.recTran.recipient.store %}
+                        {{ rt.recTran.recipient.store }}
+                    {% endif %}
+                </td>
+                <td width="20%" align="center">{{ rt.recTran.recipient.fullname }}
+                    <br>
+                    {% if rt.recTran.recipient.phone %}
+                        {{ rt.recTran.recipient.phone }}
+                    {% endif %}
+                </td>
+                <td colspan="4">
+                    <table width="100%" border="1">
+                        <tbody>
+                        {% for p in rt.products.all %}
+                            <tr>
+                                <td width="25%" align="center">{{ p.product.name }}</td>
+                                <td width="7%" align="center">
+                                    {{ p.count }}
+                                </td>
+                                <td width="7%" align="center">
+                                    {{ p.weight }}
+                                </td>
+                                <td width="7%" align="center">
+                                    {{ p.bag_number }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        <tr>
+                            <td width="25%" align="center">
+                                <b>Итого к оплате: {{ rt.remainder }}</b>
+
+                            </td>
+                            <td width="7%" align="center">
+                                <b>{{ rt.SumCount }}</b>
+                            </td>
+                            <td width="7%" align="center">
+                                <b>{{ rt.SumWeight }}</b>
+                            </td>
+                            <td width="7%" align="center">
+                                <b>{{ rt.CounterBagNumber }}</b>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td width="22%" align="center">{{ rt.recTran.sender.fullname }}<br>
+                    {% if rt.recTran.sender.phone %}
+                        {{ rt.recTran.sender.phone }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

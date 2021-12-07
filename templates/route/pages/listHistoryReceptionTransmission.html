@@ -1,0 +1,87 @@
+{% extends 'extends/index.html' %}
+{% load widget_tweaks %}
+{% block css %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    {% load static %}
+{% endblock %}
+
+{% block content_header %}
+
+    <div class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h4 class="m-0">Список Актов Прием/Передач</h4>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'route:list_rt' %}">Список Актов Прием/Передач</a></li>
+                        <li class="breadcrumb-item active">Удаленные </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{%  block content %}
+    <div class="card card-default card-outline">
+        <div class="card-body">
+            <table class="simple_table" border="1">
+                <thead>
+                <tr>
+                    <th>ID </th>
+                    <th>Рейсы</th>
+                    <th>Дата</th>
+                    <th>Грузоотправитель</th>
+                    <th>Получатель</th>
+                    <th>Место оформления</th>
+                    <td>Оператор</td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <form method="get">
+                        <th>{{ form.id|add_class:"form-control p-lg-0" }}</th>
+                        <th>{{ form.route|add_class:"form-control select2 p-lg-0" }}</th>
+                        <th>{{ form.dateRT|add_class:"form-control p-lg-0" }}</th>
+                        <th>{{ form.sender|add_class:"form-control select2 p-lg-0" }}</th>
+                        <th>{{ form.recipient|add_class:"form-control select2 p-lg-0" }}</th>
+                        <th>{{ form.registration|add_class:"form-control select2 p-lg-0" }}</th>
+                        <th>{{ form.operator|add_class:"form-control select2 p-lg-0" }}</th>
+                        <th align="center">
+                            <button class="btn btn-success" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </th>
+                    </form>
+                </tr>
+
+                </thead>
+
+                <tbody>
+                {% for r in page_obj %}
+                    <tr>
+                        <td> {{ r.id }}</td>
+                        <td> {{ r.route}}</td>
+                        <td> {{ r.dateRT }}</td>
+                        <td> {{ r.sender.fullname }}</td>
+                        <td> {{ r.recipient.fullname }}</td>
+                        <td> {{ r.registration }}</td>
+                        <td> {{ r.operator }}</td>
+                        <td align="center">
+                            <a href="{% url 'route:rt_history_id' pk=r.id %}"><i class="fa fa-eye"></i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% include 'paginator.html' %}
+    </div>
+{% endblock %}
+

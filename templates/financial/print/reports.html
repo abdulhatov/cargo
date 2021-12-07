@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>spat cargo</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'dist/css/style.css' %}">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{% static 'https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css' %}">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+    <!-- JQVMap -->
+    <link rel="stylesheet" href="{% static 'plugins/jqvmap/jqvmap.min.css' %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %}">
+    <!-- summernote -->
+    <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css' %}">
+    <!--datatable-->
+
+    <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/select2/css/select2.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css' %}">
+    <!-- CodeMirror -->
+    <link rel="stylesheet" href="{% static 'plugins/codemirror/codemirror.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/codemirror/theme/monokai.css' %}">
+    <!-- SimpleMDE -->
+    <link rel="stylesheet" href="{% static 'plugins/simplemde/simplemde.min.css' %}">
+
+    <meta charset="UTF-8">
+    <style>
+        table.c {
+            table-layout: auto;
+            width: 100%;
+            border: 1px solid #dee2e6;
+            font-size: 95%;
+            text-align: left;
+            font-family: 'Times New Roman', Times, serif;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <br>
+    <h5 style="text-align: center"> Финансовый отчет </h5>
+    <br>
+    <table class="c" border="1">
+        <thead>
+        <th>&nbsp;Дата</th>
+        <th>&nbsp;Статья</th>
+        <th>&nbsp;Приход</th>
+        <th>&nbsp;Расход</th>
+        </thead>
+        <tbody>
+        {% for ob in obj_list %}
+            <tr>
+                <td>
+                    &nbsp;{{ ob.date|date:"c" }}
+                </td>
+                <td>&nbsp;
+                    {% if ob.type == 1 or ob.type == 2 or ob.type == 3 %}
+                        {{ ob.article.name}} (ID - {{ ob.pk }})
+                        {% if ob.route %}
+                            ( RACE ID - {{ ob.route.idRoute }} - {{ ob.route.country_recipient.name }} )
+                        {% endif %}
+
+                    {% elif ob.type == 4 %}
+                        Перемещение денежных средств (из "{{ ob.cash.name }}" в "{{ ob.cash_sender.name }}")
+                    {% endif %}
+                </td>
+
+                <td> &nbsp;
+                    {% if ob.type == 1 or ob.type == 4 %}
+                        {{ ob.sum }}
+                    {% endif %}
+                </td>
+
+                <td>&nbsp;
+                    {% if ob.type == 2 or ob.type == 3 %}
+                        {{ ob.sum }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

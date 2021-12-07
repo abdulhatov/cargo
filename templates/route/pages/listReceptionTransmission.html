@@ -1,0 +1,218 @@
+{% extends base_template_name %}
+{% load widget_tweaks %}
+{% block css %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    {% load static %}
+    <script src="{% static "js/route/ajax_recTrans.js" %}"></script>
+
+{% endblock %}
+{% block content_header %}
+
+    <div class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Список Актов Прием / Передач</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item active">Список Актов Прием / Передач</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{%  block content %}
+    <script type="text/javascript">
+        var url1 = "{% url "route:search_recTran_url" %}";
+        var url2 = "{% url "route:search2_recTran_url" %}";
+    </script>
+
+    <div class="card card-primary card-outline">
+        {% if user.role == 1 or user.role == 3%}
+            <div class="card-header">
+                <div class="row">
+                    <div class="col">
+                        <a href="{% url 'route:add_rt' %}" class="btn btn-block btn-success" style="width: 100px;"> Добавить </a>
+                    </div>
+                    <div class="col">
+                        <a href="{% url 'route:list_rt_history' %}" class="float-right"> <i class="fa fa-history"></i></a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="card-body">
+            {% if user.role == 1 or user.role == 2 %}
+                <div class="card">
+                    <div class="card-header">
+                        <a href="#" class="card-link" data-toggle="collapse"
+                           data-target="#collapseExample" aria-expanded="false"
+                           aria-controls="collapseExample">Поиск по номеру сумки</a>
+                    </div>
+                    <div class="collapse" id="collapseExample">
+                        <div class="row p-3">
+                            <div class="col-sm-2">
+                                <div class="form-group field-race-receiver_id">
+                                    <input type="text" name="bag_N" id="bag_N" class="form-control" placeholder="Номер сумки" value="">
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <select class="races form-control" name="routeForSearch" id="routeForSearch">
+                                        {% for r in routes %}
+                                            <option value="{{ r.routeID }}"> {{ r.routeID }} {{ r.routeCountry }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-2"><button class="btn btn-default"
+                                                          id="button_search" type="button"> Искать</button></div>
+                            <div id="div_answer"> </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!---------------------------------------- |||| ----------------->
+
+                <div class="card">
+                    <div class="card-header">
+                        <a href="#" class="card-link" data-toggle="collapse"
+                           data-target="#collapseExample1" aria-expanded="false"
+                           aria-controls="collapseExample1">Отчет по количеству мест и веса</a>
+                    </div>
+                    <div class="collapse p-3" id="collapseExample1">
+                        <div class="row">
+                            <div class="col-sm-3"> <label>ID рейса</label> </div>
+                            <div class="col-sm-3"> <label>Грузополучатель</label> </div>
+                            <div class="col-sm-3"> <label>Грузоотправитель</label> </div>
+                            <div class="col-sm-3"> <label>Место оформления </label> </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-sm-3">
+                                <select id="raceId" name="raceId" class="form-control">
+                                    {% for r in routes %}
+                                        <option value="{{ r.routeID }}"> {{ r.routeID }} {{ r.routeCountry }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <select id="recipientId" name="recipientId" class="form-control">
+                                    {% for r in recipients %}
+                                        <option value="{{ r.pk }}"> {{ r.fullname }} </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <select id="senderId" name="senderId" class="form-control">
+                                    {% for s in senders %}
+                                        <option value="{{ s.pk }}"> {{ s.fullname }} </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <select id="registrationId" name="registrationId" class="form-control">
+                                    {% for reg in registrations %}
+                                        <option value="{{ reg.pk }}"> {{ reg.name }} </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-sm-3"> <label>Дата ОТ</label> </div>
+                            <div class="col-sm-3"> <label>Дата До</label> </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <input id="dateFrom" name="dateFrom" type="datetime-local" class="form-control">
+                            </div>
+
+                            <div class="col-sm-3">
+                                <input id="dateTo" name="dateTo" type="datetime-local" class="form-control">
+                            </div>
+                            <div class="col-sm-2">
+                                <button class="btn btn-default"
+                                        id="button_search2" type="button"> Искать</button>
+                            </div>
+                            <p style="color:blue" id="div_answer2"> </p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!---------------------------------------- |||| ----------------->
+
+            <table class="simple_table" border="1">
+                <thead>
+                <tr>
+                    <th>ID </th>
+                    <th>Рейсы</th>
+                    <th>Дата</th>
+                    <th>Грузоотправитель</th>
+                    <th>Получатель</th>
+                    <th>Место оформления</th>
+                    <th>Оператор</th>
+                    <th></th>
+                </tr>
+
+                <tr>
+                    <form method="get">
+                        <th>{{ form.id|add_class:"form-control p-lg-0" }}</th>
+                        <th>{{ form.route|add_class:"form-control select2 p-lg-0" }}</th>
+                        <th>{{ form.dateRT|add_class:"form-control p-lg-0" }}</th>
+                        <th>{{ form.sender|add_class:"form-control select2 p-lg-0" }}</th>
+                        <th>{{ form.recipient|add_class:"form-control select2 p-lg-0" }}</th>
+                        <th>{{ form.registration|add_class:"form-control select2 p-lg-0" }}</th>
+                        <th>{{ form.operator|add_class:"form-control select2 p-lg-0" }}</th>
+                        <th align="center">
+                            <button class="btn btn-success" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </th>
+                    </form>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for r in page_obj %}
+                    <tr>
+                        <td> {{ r.id }}</td>
+                        <td> {{ r.route}}</td>
+                        <td> {{ r.dateRT }}</td>
+                        <td> {{ r.sender.fullname }}</td>
+                        <td> {{ r.recipient.fullname }}</td>
+                        <td> {{ r.registration }}</td>
+                        <td> {{ r.operator.email }}</td>
+                        <td>
+
+                        <a href="{% url 'route:rt_id' pk=r.id %}"><i class="fa fa-eye"></i></a>
+
+                            {% if user.role == 1  or request.user.email == r.operator.email %}
+                                <a href="{% url 'route:edit_rt' pk=r.id %}"> <i class="fa fa-edit"></i> </a>&nbsp;
+                                <a class="confirm-delete"
+                                   href="{% url 'route:delete_rt' pk=r.id %}">
+                                    <i class="fa fa-trash-alt"></i>
+                                </a>&nbsp;
+                             {% elif user.role == 2 %}
+                                <a href="{% url 'route:edit_rt' pk=r.id %}"> <i class="fa fa-edit"></i> </a>&nbsp;
+                            {% endif %}
+                          </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% include 'paginator.html' %}
+    </div>
+{% endblock %}

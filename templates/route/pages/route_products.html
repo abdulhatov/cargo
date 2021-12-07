@@ -1,0 +1,90 @@
+{% extends base_template_name %}
+{% block css %}
+    {% load static %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="{% static "js/route/show_route_ID.js" %}"></script>
+{% endblock %}
+
+{% block content_header %}
+
+    <div class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Просмотр Количества товара</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'route:list_route_url' %}">Рейсы</a></li>
+                        <li class="breadcrumb-item active">Просмотр Количества товара</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="card card-primary card-outline">
+        <div class="card-body">
+            <div class="btn-group">
+                <a class="btn btn-success print" href="{% url 'route:print_products' pk=routeID %}"><i class="fa fa-fw fa-print"></i> Печать</a>
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a class="dropdown-item" href="{% url 'route:route_bag_report_old' routeID %}"><i class="fa fa-eye"></i> Отчет по сумкам (старый)</a></li>
+                    <li><a class="dropdown-item" href="{% url 'route:route_bag_report' routeID %}"><i class="fa fa-eye"></i> Отчет по сумкам </a></li>
+                    <li><a class="dropdown-item"
+                           {% if user.role == 1 or user.role == 5%}
+                           href="{% url 'route:route_num_places' routeID %}"
+                            {% elif user.role == 6 %}
+                           href="{% url 'route:route_num_places_client' routeID %}"
+                            {% endif %}
+                    ><i class="fa fa-eye"></i> Количество мест </a></li>
+                    <li><a class="dropdown-item" href="{% url 'route:route_num_places_agent' routeID %}"><i class="fa fa-eye"></i> Количество мест (По контрагентам)</a></li>
+                    <li><a class="dropdown-item" href="{% url 'route:route_count_products' routeID %}"><i class="fa fa-eye"></i> Количество товара </a></li>
+                </ul>
+            </div>
+            <br>
+            <h5 style="text-align: center"> {{ routeInf }} </h5>
+            <br>
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Наименование товара</th>
+                    <th>Код ТНВД</th>
+                    <th>Количество</th>
+                    <th>Вес</th>
+                    <th>Сумки</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for k,v in dict.items %}
+                    <tr>
+                        {% for i in v %}
+                            <td>{{ i }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                <tr>
+                    {% for l in last %}
+                        <td><b>{{ l }}</b></td>
+                    {% endfor %}
+                </tr>
+                </tbody>
+            </table>
+            <BR><p><b></b><BR><b>Итого вес: {{ weight_sum }}</b></p>
+
+        </div>
+    </div>
+
+{% endblock %}
+

@@ -1,0 +1,400 @@
+{% extends base_template_name %}
+{% load static %}
+{% load bootstrap4 %}
+{% load formset_tags %}
+{% load widget_tweaks %}
+{% block content_header %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">{{ text }}</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'main:clients' %}">Список клиентов</a></li>
+                        <li class="breadcrumb-item active">{{ text }}</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        <script type="text/javascript">
+            var urlSender = "{% url "main:sender_add_ajax" %}";
+            var url2 = "{% url "main:load_senders_ajax" %}";
+        </script>
+        <div class="card card-primary card-outline">
+            <div class="card-body">
+                <div class="row">
+                    {% csrf_token %}
+                    {{ form.media.js }}
+
+                    <div class="col-4">
+                        <label class="required">ID клиента</label>
+                        {{ form.clientID|add_class:"form-control" }}
+                        {{ form.clientID.errors.as_ul }}
+                    </div>
+
+                    <div class="col-4">
+                        <label class="required"> Тип клиента </label>
+                        {{ form.type|attr:"hidden" }}
+                        <input type="text" value="Грузополучатель" readonly="readonly" class="form-control">
+                    </div>
+
+                    <div class="col-4">
+                        <label class="required"> Полное имя </label>
+                        {{ form.fullname|add_class:"form-control" }}
+                        {{ form.fullname.errors.as_ul }}
+                    </div>
+
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-4">
+                        <label> Телефон </label>
+                        {{ form.phone|add_class:"form-control" }}
+                        {{ form.phone.errors.as_ul }}
+                    </div>
+                    <div class="col-4">
+                        <label class="required">Страна </label>
+                        {{ form.country|add_class:"form-control select2" }}
+                        {{ form.country.errors.as_ul }}
+                    </div>
+                    <div class="col-4">
+                        <label>Город </label>
+                        {{ form.city|add_class:"form-control select2" }}
+                        {{ form.city.errors.as_ul }}
+                    </div>
+                </div>
+                <br>
+
+                <div class="row">
+                    <div class="col-4">
+                        <label> ИНН </label>
+                        {{ form.inn|add_class:"form-control" }}
+                        {{ form.inn.errors.as_ul }}
+                    </div>
+
+                    <div class="col-4">
+                        <label> ОГРНИП | ОКПО, № патента</label>
+                        {{ form.okpo|add_class:"form-control" }}
+                        {{ form.okpo.errors.as_ul }}
+                    </div>
+                    <div class="col-4">
+                        <label> Код </label>
+                        {{ form.code|add_class:"form-control" }}
+                        {{ form.code.errors.as_ul }}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-4">
+                        <label>Рынок</label>
+                        {{ form.store|add_class:"form-control"}}
+                        {{ form.store.errors.as_ul }}
+                    </div>
+
+                    <div class="col-4">
+                        <label>Ряд</label>
+                        {{ form.row|add_class:"form-control" }}
+                        {{ form.row.errors.as_ul }}
+                    </div>
+
+                    <div class="col-4">
+                        <label>Контейнер</label>
+                        {{ form.container|add_class:"form-control" }}
+                        {{ form.container.errors.as_ul }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-primary card-outline">
+            <div id="storeformset" data-formset-prefix="{{ storeformset.prefix }}">
+                {{ storeformset.media }}
+                {{ storeformset.management_form }}
+
+                <div class="card-header">
+                    <h3 class="card-title m-0"> Рынки клиента </h3>
+                    <input type="button" class="btn btn-success float-right" value="Добавить" data-formset-add>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-3"><b> Город</b></div>
+                        <div class="col-3"><b> Рынок </b></div>
+                        <div class="col-2"><b> Ряд </b></div>
+                        <div class="col-3"><b> Контейнер </b></div>
+                        <div class="col-1"></div>
+                    </div>
+                    <br>
+                    <div data-formset-body>
+                        {% for form in storeformset %}
+                            {% for hidden_field in form.hidden_fields %}
+                                {{ hidden_field }}
+                            {% endfor %}
+                            <div data-formset-form>
+                                <div class="row">
+                                    <div class="col-3">
+                                        {{ form.city|add_class:"select2 form-control" }}
+                                        {{ form.city.errors.as_ul }}
+                                    </div>
+
+                                    <div class="col-3">
+                                        {{ form.store|add_class:"form-control"}}
+                                        {{ form.store.errors.as_ul }}
+                                    </div>
+
+                                    <div class="col-2">
+                                        {{ form.row|add_class:"form-control" }}
+                                        {{ form.row.errors.as_ul }}
+                                    </div>
+
+                                    <div class="col-3">
+                                        {{ form.container|add_class:"form-control" }}
+                                        {{ form.container.errors.as_ul }}
+                                    </div>
+
+                                    <div class="col-1">
+                                        <button type="button" id="id_deleted_but" class="btn btn-danger btn-flat"
+                                                data-formset-delete-button>
+                                            <i class="fa fa-trash-alt"></i></button>
+                                        <div hidden="false">{{ storeformset.empty_form.DELETE }}</div>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                        {% endfor %}
+                        {% for error in storeformset.errors %}
+                            {% if error %}
+                                <div class="text-danger">
+                                    <strong>{{ error|escape }}</strong>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <script type="form-template" data-formset-empty-form>
+                        {% escapescript %}
+                            <div data-formset-form>
+
+                                {% for hidden_field in storeformset.empty_form.hidden_fields %}
+                                    {{ hidden_field }}
+                                {% endfor %}
+
+                                <div class="row">
+                                    <div class="col-3">
+                                        {{ storeformset.empty_form.city|add_class:"select2 form-control" }}
+                                        {{ storeformset.empty_form.city.errors.as_ul }}
+                                    </div>
+
+                                    <div class="col-3">
+                                        {{ storeformset.empty_form.store|add_class:"form-control"}}
+                                        {{ storeformset.empty_form.store.errors.as_ul }}
+                                    </div>
+
+                                    <div class="col-2">
+                                        {{ storeformset.empty_form.row|add_class:"form-control" }}
+                                        {{ storeformset.empty_form.row.errors.as_ul }}
+                                    </div>
+
+                                    <div class="col-3">
+                                        {{ storeformset.empty_form.container|add_class:"form-control" }}
+                                        {{ storeformset.empty_form.container.errors.as_ul }}
+                                    </div>
+
+                                    <div class="col-1">
+                                        <button type="button" id="id_deleted_but" class="btn btn-danger btn-flat"
+                                                data-formset-delete-button>
+                                            <i class="fa fa-trash-alt"></i></button>
+                                        <div hidden="false">{{ storeformset.empty_form.DELETE }}</div>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                        {% endescapescript %}
+                    </script>
+
+                    <script>
+                        jQuery(function ($) {
+                            $("#storeformset").formset({
+                                animateForms: true
+                            });
+                        });
+
+                        $('#storeformset').on('formAdded', function (event) {
+                            $('.select2').select2();
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-primary card-outline">
+            <div id="senderformset" data-formset-prefix="{{ senderformset.prefix }}">
+                {{ senderformset.media }}
+                {{ senderformset.management_form }}
+
+                <div class="card-header">
+                    <h3 class="card-title m-0"> Отправители клиента</h3>
+                    <div class="float-right">
+                        <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#modal-lg">
+                            Добавить отправителя
+                        </button>
+                        <input type="button" class="btn btn-success" value="Добавить" data-formset-add>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div data-formset-body>
+                        {% for form in senderformset %}
+                            {% for hidden_field in form.hidden_fields %}
+                                {{ hidden_field }}
+                            {% endfor %}
+                            <div data-formset-form>
+
+                                <div class="input-group">
+                                    {{ form.sender |add_class:"select2 form-control" }}
+                                    {{ form.sender.errors.as_ul }}
+                                    <span class="input-group-append">
+                                    <button type="button" class="btn btn-danger btn-flat" data-formset-delete-button>
+                                        <i class="fa fa-trash-alt"></i></button>
+                                    <div hidden="false">{{ form.DELETE }}</div>
+                                </span>
+                                </div>
+                                <br>
+                            </div>
+                        {% endfor %}
+                        {% for error in senderformset.errors %}
+                            {% if error %}
+                                <div class="alert alert-danger">
+                                    <strong>{{ error|escape }}</strong>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <script type="form-template" data-formset-empty-form>
+                        {% escapescript %}
+                            <div data-formset-form>
+                                {% for hidden_field in senderformset.empty_form.hidden_fields %}
+                                    {{ hidden_field }}
+                                {% endfor %}
+                                <div class="input-group">
+                                    {{ senderformset.empty_form.sender |add_class:"select2 form-control" }}
+                                    {{ senderformset.empty_form.sender.errors.as_ul }}
+                                    <span class="input-group-append">
+                                    <button type="button" class="btn btn-danger btn-flat" data-formset-delete-button>
+                                        <i class="fa fa-trash-alt"></i></button>
+                                    <div hidden="false">{{ senderformset.empty_form.DELETE }}</div>
+                                </span>
+                                </div>
+                                <br>
+                            </div>
+                        {% endescapescript %}
+                    </script>
+
+                    <script>
+                        jQuery(function ($) {
+                            $("#senderformset").formset({
+                                animateForms: true
+                            });
+                        });
+
+                        $('#senderformset').on('formAdded', function (event) {
+                            $('.select2').select2();
+                            load_senders();
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-default card-outline">
+            <div class="card-body">
+                <input type="submit" class="btn btn-success" value="Сохранить">
+            </div>
+        </div>
+    </form>
+
+    <div class="modal fade" id="modal-lg">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form id="id_sender_form">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Добавление Грузоотправителя</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        <div class="row mb-4">
+                            <label class="col-sm-2 required"> Полное имя </label>
+                            <div class="col-sm-8">
+                                {{ senders_form.fullname|add_class:"form-control" }}
+                                <div class="errorlist" id="id_fullname_error">
+                                    {{ senders_form.fullname.errors.as_ul }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <label class="col-sm-2 col-form-label required" > Страна </label>
+                            <div class="col-sm-8">
+                                {{ senders_form.country|add_class:"form-control select2" }}
+                                {{ senders_form.country.errors.as_ul }}
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <label class="col-sm-2 col-form-label" > ИНН </label>
+                            <div class="col-sm-8">
+                                {{ senders_form.inn|add_class:"form-control" }}
+                                {{ senders_form.inn.errors.as_ul }}
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <label class="col-sm-2 col-form-label" > ОКПО, № патента </label>
+                            <div class="col-sm-8">
+                                {{ senders_form.okpo|add_class:"form-control" }}
+                                {{ senders_form.okpo.errors.as_ul }}
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <label class="col-sm-2 col-form-label" > Телефон </label>
+                            <div class="col-sm-8">
+                                {{ senders_form.phone|add_class:"form-control" }}
+                                {{ senders_form.phone.errors.as_ul }}
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <label class="col-sm-2 col-form-label" > Адрес </label>
+                            <div class="col-sm-8">
+                                {{ senders_form.address|add_class:"form-control" }}
+                                {{ senders_form.address.errors.as_ul }}
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                        <input type="submit" class="btn btn-primary" value="Сохранить" />
+                    </div>
+                </form>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static "js/sendersOfclient.js" %}"></script>
+{% endblock %}
+
+

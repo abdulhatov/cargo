@@ -1,0 +1,118 @@
+{% extends base_template_name %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content_header %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Операции в складах</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item active">Операции в складах</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            {% if user.role == 1 %}
+                <a href="{% url 'warehouse:wh_income_add' %}">
+                    <button type="button" class="btn btn-success">Приходник</button>
+                </a>
+            {% endif %}
+            <a href="{% url 'warehouse:wh_consumption_add' %}">
+                <button type="button" class="btn btn-success">Расходник</button>
+            </a>
+            {% if user.role == 1 %}
+                <a href="{% url 'warehouse:wh_moving_add' %}">
+                    <button type="button" class="btn btn-success">Перемещение</button>
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="card-body">
+            <table class="table table-bordered table-hover" style="font-size: 90%">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Дата</th>
+                    <th>В склад</th>
+                    <th>Из склада</th>
+                    <th>Тип</th>
+                    <th>Менеджер</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <form method="get">
+                        <td>{{ form.id|add_class:"form-control" }}</td>
+                        <td>{{ form.date|add_class:"form-control" }}</td>
+                        <td>{{ form.warehouse|add_class:"form-control" }}</td>
+                        <td>{{ form.from_warehouse|add_class:"form-control" }}</td>
+                        <td>{{ form.type|add_class:"form-control" }}</td>
+                        <td>{{ form.added_by|add_class:"form-control" }}</td>
+                        <td align="center">
+                            <button class="btn btn-success" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </td>
+                    </form>
+                </tr>
+                {% for i in page_obj %}
+                    <tr>
+                        <td>{{ i.id }}</td>
+                        <td>{{ i.date }}</td>
+                        <td>{{ i.warehouse }}</td>
+                        <td>{% if i.from_warehouse %} {{ i.from_warehouse }} {% endif %}</td>
+                        <td>{{ i.get_type_display }}</td>
+                        <td>{{ i.added_by }}</td>
+                        <td align="right">
+                            {% if i.type == 1 %}
+                                <a href="{% url 'warehouse:wh_incomeId' pk=i.id %}">
+                                    <i class="fa fa-eye"></i> </a>
+                                <a href="{% url 'warehouse:wh_income_cashier' pk=i.id %}">
+                                    <i class="fa fa-money-bill"></i> </a>
+                                <a href="{% url 'warehouse:wh_income_edit' pk=i.id %}">
+                                    <i class="fa fa-edit"></i> </a>
+                                <a class="confirm-delete" href="{% url 'warehouse:wh_income_delete' pk=i.id %}">
+                                    <i class="fa fa-trash-alt"></i></a>
+                            {% elif i.type == 2 %}
+
+                                <a href="{% url 'warehouse:wh_consumptionId' pk=i.id %}">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                                <a href="{% url 'warehouse:wh_consumption_edit' pk=i.id %}">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <a class="confirm-delete" href="{% url 'warehouse:wh_consumption_delete' pk=i.id %}">
+                                    <i class="fa fa-trash-alt"></i>
+                                </a>
+
+                            {% elif i.type == 3 %}
+                                <a href="{% url 'warehouse:wh_movingId' pk=i.id %}"> <i class="fa fa-eye"></i> </a>
+                                <a href="{% url 'warehouse:wh_moving_edit' pk=i.id %}">
+                                    <i class="fa fa-edit"></i> </a>
+                                <a class="confirm-delete" href="{% url 'warehouse:wh_moving_delete' pk=i.id %}">
+                                    <i class="fa fa-trash-alt"></i>
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% include 'paginator.html' %}
+
+    </div>
+{% endblock %}

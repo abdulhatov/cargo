@@ -1,0 +1,73 @@
+{% extends 'extends/base.html' %}
+{% block menu %}
+    <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <!-- Add icons to the links using the .nav-icon class
+                 with font-awesome or any other icon font library -->
+            <li class="nav-item menu-open">
+                <a href="#" class="nav-link active">
+                    <i class="nav-icon fas fa-newspaper"></i>
+                    <p>
+                        Контент
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'main:products' %}" class="nav-link active">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Список товаров</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'main:clients' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Клиенты</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'main:employees' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Сотрудники</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'main:contrageny' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Контрагены</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-truck"></i>
+                    <p>
+                        Рейсы <i class="fas fa-angle-left right"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'route:list_route_url' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Список</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'route:list_rt' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Прием/передача</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'route:service_price' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Цены сервисов</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+{% endblock %}

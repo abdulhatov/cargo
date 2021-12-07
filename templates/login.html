@@ -1,0 +1,64 @@
+{% load static %}
+{% load widget_tweaks %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Amanat cargo</title>
+    <link rel="stylesheet" href="{% static 'dist/css/login_page_style.css' %}">
+    <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+
+</head>
+
+<body style="background-color:#343a40;">
+<br>
+<br>
+<br>
+
+<h3 class="text-center text-white pt-5">Добро пожаловать в Amanat cargo</h3>
+<br>
+<div class="container">
+    <div id="login-row" class="row justify-content-center align-items-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-center text-sm">Авторизуйтесь для начала работы</div>
+                    <br>
+                    {% if form.errors %}
+                        <div class="alert alert-danger alert-dismissible text-sm">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            Не совпадение имени пользователя и пароля
+                        </div>
+
+                    {% endif %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            {{ form.username|add_class:"form-control"|attr:"placeholder=Email" }}
+                            <div class="input-group-append">
+                                <span class="input-group-text"> <i class="fa fa-envelope"> </i></span>
+                            </div>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            {{ form.password|add_class:"form-control"|attr:"placeholder=Password" }}
+                            <div class="input-group-append">
+                                <span class="input-group-text"> <i class="fa fa-lock"> </i></span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-25 float-right">Войти</button>
+                    </form>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

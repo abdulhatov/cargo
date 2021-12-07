@@ -1,0 +1,93 @@
+{% extends base_template_name %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content_header %}
+
+    <div class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h3 class="m-0">Список приходников в дебиторку</h3>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item active">Список приходников в дебиторку</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <a href="{% url 'debits:income_add' %}">
+                <button type="button" class="btn btn-success">Добавить</button>
+            </a>
+        </div>
+
+        <div class="card-body">
+            <table class="table table-bordered table-hover" style="font-size: 90%">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Дата</th>
+                    <th>Касса</th>
+                    <th>Сумма</th>
+                    <th>Статья</th>
+
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+
+                 <tr>
+                    <form method="get">
+                        <td>{{ form.id|add_class:"form-control" }}</td>
+                        <td>{{ form.date|add_class:"form-control" }}</td>
+                        <td>{{ form.cashBox|add_class:"form-control" }}</td>
+                        <td>{{ form.sum|add_class:"form-control" }}</td>
+                        <td>{{ form.wh_article|add_class:"form-control" }}</td>
+
+                        <td align="center">
+                            <button class="btn btn-success" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </td>
+                    </form>
+                </tr>
+
+                    {% for obj in page_obj %}
+                        <tr>
+                            <td>{{ obj.pk }}</td>
+                            <td>{{ obj.date }}</td>
+                            <td>{{ obj.cashBox.name }}</td>
+                            <td>{{ obj.sum }}</td>
+                            <td>{{ obj.wh_article.name }}</td>
+
+                            <td>
+                                <a href="{% url 'debits:income_id' obj.pk  %}">
+                                    <i class="fa fa-eye"></i></a>&nbsp;
+
+                                <a href="{% url 'debits:income2_id' obj.pk %}">
+                                    <i class="fa fa-file-pdf"></i></a>&nbsp;
+                                <a href="{% url 'debits:income_edit' obj.pk  %}">
+                                    <i class="fa fa-edit"></i></a>&nbsp;
+                                <a class="confirm-delete" href="#"> <i class="fa fa-trash-alt"></i></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% include 'paginator.html' %}
+
+    </div>
+
+{% endblock %}

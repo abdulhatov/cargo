@@ -1,0 +1,29 @@
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-8">
+                    Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+                </div>
+                <div class="col-4">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-end">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1">&laquo;</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">предыдущий</a>
+                                </li>
+                            {% endif %}
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">следующий</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}"> &raquo;</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>

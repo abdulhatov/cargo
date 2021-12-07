@@ -1,0 +1,134 @@
+{% extends 'extends/index.html' %}
+{% block css %}
+    {% load static %}
+    {% load bootstrap4 %}
+    <script src="{% static "js/route/createRecTran.js" %}"></script>
+    <style>
+        .SZ { font-size: 90%; /* Размер шрифта в процентах */}
+    </style>
+{% endblock %}
+{% block content_header %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h3 class="m-0">Просмотр приходника</h3>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'warehouse:wh_operations' %}">Список операций</a></li>
+                        <li class="breadcrumb-item active">Просмотр приходника</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="card card-primary card-outline SZ">
+        <div class="card-body">
+            <table width="100%">
+                <tbody><tr>
+                    <td width="70%" valign="top">
+                        <table width="100%">
+                            <tbody><tr>
+                                <td width="70%" align="center"><h4>Приходный кассовый ордер</h4></td>
+                                <td width="30%">
+                                    <table width="100%" border="1">
+                                        <tbody><tr>
+                                            <td align="center">Номер документа</td>
+                                            <td align="center">Дата составления</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center">{{ id }}</td>
+                                            <td align="center">{{ date }}</td>
+                                        </tr>
+                                        </tbody></table>
+                                </td>
+                            </tr>
+                            </tbody></table>
+                        <p>Принято от: &nbsp;&nbsp;&nbsp;&nbsp;<b>() , </b></p>
+
+                        <p>Основание: &nbsp;&nbsp;&nbsp;&nbsp;<b>{{ wh_article }}</b></p>
+                        <p>Сумма: &nbsp;&nbsp;&nbsp;&nbsp;<b>{{ sumS }}</b></p>
+                        <br>
+                        <p>Примечание:</p>
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Чек</th>
+                                <th>Код клиента</th>
+                                <th>Рейс</th>
+                                <th>Сумма</th>
+                                <th>Статья</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Приход в склад</td>
+                                <td> </td>
+                                <td> </td>
+                                <td>{{ sumS }}</td>
+                                <td>{{ wh_article }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!--?php endif; ?-->
+                        <br><br><br>
+                        <table width="100%">
+                            <tbody><tr>
+                                <td width="33%">Главный бухгалтер</td>
+                                <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;"></div></td>
+                                <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;"></div></td>
+                            </tr>
+                            <tr>
+                                <td width="33%">Получил кассир</td>
+                                <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;">{{ user }}</div></td>
+                                <td width="33%"><div style="border-bottom: 1px solid #000; margin: 40px 20px 0 20px;"></div></td>
+                            </tr>
+                            </tbody></table>
+                    </td>
+                    <td width="30%" valign="top">
+                        <div style="border-left: 1px solid; border-left-style: dotted;margin-left: 10px;width: 100%;display: block; padding: 0px 10px;">
+                            <center>ОсОО "SapatCargo"</center><hr>
+                            <center><h4>Квитанция</h4></center>
+                            <center>к приходному кассовому ордеру</center>
+                            <center>№{{ id }} от {{ date }}</center>
+                            <br><br>
+                            <p>Принято от: &nbsp;&nbsp;&nbsp;&nbsp;<b>() , </b></p>
+
+                            <p>Основание: &nbsp;&nbsp;&nbsp;&nbsp;<b>Приобретение товаров</b></p>
+                            <p>Сумма: &nbsp;&nbsp;&nbsp;&nbsp;<b>{{ sumS }}</b></p>
+                            <br><br><br>
+                            <table width="100%">
+                                <tbody><tr>
+                                    <td colspan="2">Главный бухгалтер</td>
+                                </tr>
+                                <tr>
+                                    <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 0px;"></div></td>
+                                    <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 0px;"></div></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><br>Получил кассир</td>
+                                </tr>
+                                <tr>
+                                    <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 0px;">{{ user }}</div></td>
+                                    <td width="33%"><div style="border-bottom: 1px solid #000; margin: 40px 20px 0 0px;"></div></td>
+                                </tr>
+                                </tbody></table>
+                        </div>
+                    </td>
+                </tr>
+                </tbody></table>
+            <br>
+            <a href="{% url 'warehouse:wh_in_cash_Print' pk=id %}"
+               class="btn btn-block btn-success" style="width: 100px;">
+                <i class="fa fa-print"></i>
+                Печать </a>
+        </div>
+    </div>
+
+{% endblock %}
+

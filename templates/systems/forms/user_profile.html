@@ -1,0 +1,44 @@
+{% extends base_template_name %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content_header %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h3 class="m-0">Редактирование профиля</h3>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item active">Редактирование профиля</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="card card-primary card-outline">
+
+        <form method="post">
+            <div class="card-body">
+                {% csrf_token %}
+                <p> <b>Имя:</b>&nbsp;&nbsp; {{ user.first_name }}</p>
+                <p> <b>Фамилия:</b>&nbsp;&nbsp; {{ user.last_name }}</p>
+                <div class="form-group">
+                    <label>Телефон:</label>
+                    {{ form.phone|add_class:"form-control col-3" }}
+                    {{ form.phone.errors}}
+                </div>
+                <p> <b>Email:</b>&nbsp;&nbsp; {{ user.email }} </p>
+                <a href="{% url 'change_password' %}"> Изменить пароль </a>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

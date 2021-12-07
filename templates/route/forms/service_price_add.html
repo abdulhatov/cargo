@@ -1,0 +1,164 @@
+{% extends 'extends/index.html' %}
+{% load static %}
+{% load formset_tags %}
+{% load widget_tweaks %}
+{% block css %}
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+{% endblock %}
+
+{% block content_header %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h3 class="m-0">{{ text }}</h3>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'route:service_price' %}">Цены сервисов</a></li>
+                        <li class="breadcrumb-item active">{{ text }}</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <form method="POST">
+
+        <div class="card card-primary card-outline">
+            <div class="card-body">
+                <div class="row">
+                    {% csrf_token %}
+                    <div class="col-4"> <label class="required"> Дата </label> {{ form.date }} </div></div>
+            </div>
+        </div>
+
+        <div class="card card-primary card-outline">
+            <div id="idFormset" data-formset-prefix="{{ prices.prefix }}">
+                <div class="card-header">
+                    Цены
+                    <div class="float-right">
+                        <input type="button" class="btn btn-success" value="Добавить" data-formset-add>
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-3"><b>Сервис</b></div>
+                        <div class="col-3"><b>Страна</b></div>
+                        <div class="col-2"><b>Валюта</b></div>
+                        <div class="col-3"><b>Цена</b></div>
+                        <div class="col-1"></div>
+                    </div>
+                    <br>
+                    {{ prices.media }}
+                    {{ prices.management_form }}
+
+                    <div data-formset-body id="id_price_form">
+                        {% for form in prices %}
+                            <div data-formset-form>
+                                {% for hidden_field in form.hidden_fields %}
+                                    {{ hidden_field }}
+                                {% endfor %}
+                                <div class="row">
+                                    <div class="col-3">
+                                        {{ form.service |add_class:"select2" }}
+                                        {{ form.service.errors.as_ul }}
+                                    </div>
+                                    <div class="col-3">
+                                        {{ form.country |add_class:"select2" }}
+                                        {{ form.country.errors.as_ul }}
+                                    </div>
+                                    <div class="col-2">
+                                        {{ form.currency |add_class:"select2" }}
+                                        {{ form.currency.errors.as_ul }}
+                                    </div>
+                                    <div class="col-3">
+                                        {{ form.price }}
+                                        {{ form.price.errors.as_ul }}
+                                    </div>
+                                    <div class="col-1">
+                                        <button type="button" class="btn btn-danger btn-flat delete-price">
+                                            <i class="fa fa-trash-alt"></i></button>
+                                        <div hidden="false">{{ form.DELETE }}</div>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <script type="form-template" data-formset-empty-form>
+                        {% escapescript %}
+                            <div data-formset-form>
+                                {% for hidden_field in prices.empty_form.hidden_fields %}
+                                    {{ hidden_field }}
+                                {% endfor %}
+                                <div class="row">
+                                    <div class="col-3">
+                                        {{ prices.empty_form.service |add_class:"select2" }}
+                                        {{ prices.empty_form.service.errors.as_ul }}
+                                    </div>
+                                    <div class="col-3">
+                                        {{ prices.empty_form.country |add_class:"select2" }}
+                                        {{ prices.empty_form.country.errors.as_ul }}
+                                    </div>
+                                    <div class="col-2">
+                                        {{ prices.empty_form.currency|add_class:"select2" }}
+                                        {{ prices.empty_form.currency.errors.as_ul }}
+                                    </div>
+                                    <div class="col-3">
+                                        {{ prices.empty_form.price }}
+                                        {{ prices.empty_form.price.errors.as_ul }}
+                                    </div>
+                                    <div class="col-1">
+                                        <div hidden="false">{{ prices.empty_form.DELETE }}</div>
+                                        <button type="button" class="btn btn-danger btn-flat delete-price">
+                                            <i class="fa fa-trash-alt"></i></button>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                        {% endescapescript %}
+                    </script>
+                    <script>
+                        jQuery(function ($) {
+                            $("#idFormset").formset({
+                                animateForms: true
+                            });
+                        });
+
+                        $('#idFormset').on('formAdded', function (event) {
+                            $(function () {
+                                $('.select2').select2();
+                            });
+                        });
+
+                        jQuery(document).on('click', 'button.delete-price', function(event) {
+                            var totalForm = jQuery('#id_price_form div[data-formset-form]:visible').length;
+                            if(totalForm > 1)
+                            {
+                                var defaultClass = jQuery(this).parent().parent().parent();
+                                defaultClass.attr('data-formset-form-deleted', true).hide();
+                                defaultClass.find('input[type="checkbox"').attr('checked', 'checked');
+                            }
+                            else{
+                                alert('Вы должны отправить хотя бы одну форму');
+                            }
+                        });
+
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <button type="submit" class="btn btn-success">Сохранить</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

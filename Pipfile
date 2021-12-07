@@ -1,0 +1,33 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django-widget-tweaks = "*"
+django = "*"
+python-dotenv = "*"
+psycopg2-binary = "*"
+django-smart-selects = "*"
+django-formset-js = "*"
+whitenoise = "*"
+xdg = "*"
+pyxdg = "*"
+pytz = "*"
+weasyprint = "*"
+django-bootstrap4 = "*"
+gunicorn = "*"
+django-on-heroku = "*"
+dj-database-url = "*"
+django-filter = "*"
+
+[dev-packages]
+pylint = "*"
+pycodestyle = "*"
+sphinx = "*"
+better-apidoc = "*"
+sphinxcontrib-fulltoc = "*"
+coverage = "*"
+
+[requires]
+python_version = "3.8"

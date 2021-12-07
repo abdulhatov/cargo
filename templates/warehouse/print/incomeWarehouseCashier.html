@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>spat cargo</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'dist/css/style.css' %}">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{% static 'https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css' %}">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+    <!-- JQVMap -->
+    <link rel="stylesheet" href="{% static 'plugins/jqvmap/jqvmap.min.css' %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %}">
+    <!-- summernote -->
+    <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css' %}">
+    <!--datatable-->
+
+    <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/select2/css/select2.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css' %}">
+    <!-- CodeMirror -->
+    <link rel="stylesheet" href="{% static 'plugins/codemirror/codemirror.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/codemirror/theme/monokai.css' %}">
+    <!-- SimpleMDE -->
+    <link rel="stylesheet" href="{% static 'plugins/simplemde/simplemde.min.css' %}">
+
+    <meta charset="UTF-8">
+    <style>
+         body {
+            font-size: 95%;
+            font-family: "Times New Roman", Times, serif; }
+
+        table{
+            table-layout: fixed;}
+
+    </style>
+
+</head>
+<body>
+<h5 style="text-align: center"> SapatCargo - Просмотр приходника</h5>
+<br>
+<br>
+<table width="100%">
+    <tbody><tr>
+        <td width="70%" valign="top">
+            <table width="100%">
+                <tbody><tr>
+                    <td width="70%" align="center"><h4>Приходный кассовый ордер</h4></td>
+                    <td width="30%">
+                        <table width="100%" border="1">
+                            <tbody><tr>
+                                <td align="center">Номер документа</td>
+                                <td align="center">Дата составления</td>
+                            </tr>
+                            <tr>
+                                <td align="center">{{ id }}</td>
+                                <td align="center">{{ date }}</td>
+                            </tr>
+                            </tbody></table>
+                    </td>
+                </tr>
+                </tbody></table>
+            <p>Принято от: &nbsp;&nbsp;&nbsp;&nbsp;<b>() , </b></p>
+
+            <p>Основание: &nbsp;&nbsp;&nbsp;&nbsp;<b>{{ wh_article }}</b></p>
+            <p>Сумма: &nbsp;&nbsp;&nbsp;&nbsp;<b>{{ sumS }}</b></p>
+            <br>
+            <p>Примечание:</p>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Чек</th>
+                    <th>Код клиента</th>
+                    <th>Рейс</th>
+                    <th>Сумма</th>
+                    <th>Статья</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Приход в склад</td>
+                    <td> </td>
+                    <td> </td>
+                    <td>{{ sumS }}</td>
+                    <td>{{ wh_article }}</td>
+                </tr>
+                </tbody>
+            </table>
+            <!--?php endif; ?-->
+            <br><br><br>
+            <table width="100%">
+                <tbody><tr>
+                    <td width="33%">Главный бухгалтер</td>
+                    <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;"></div></td>
+                    <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;"></div></td>
+                </tr>
+                <tr>
+                    <td width="33%">Получил кассир</td>
+                    <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 20px;">{{ added_by }}</div></td>
+                    <td width="33%"><div style="border-bottom: 1px solid #000; margin: 40px 20px 0 20px;"></div></td>
+                </tr>
+                </tbody></table>
+        </td>
+        <td width="30%" valign="top">
+            <div style="border-left: 1px solid; border-left-style: dotted;margin-left: 10px;width: 100%;display: block; padding: 0px 10px;">
+                <center>ОсОО "SapatCargo"</center><hr>
+                <center><h4>Квитанция</h4></center>
+                <center>к приходному кассовому ордеру</center>
+                <center>№{{ id }} от {{ date }}</center>
+                <br><br>
+                <p>Принято от: &nbsp;&nbsp;&nbsp;&nbsp;<b>() , </b></p>
+
+                <p>Основание: &nbsp;&nbsp;&nbsp;&nbsp;<b>Приобретение товаров</b></p>
+                <p>Сумма: &nbsp;&nbsp;&nbsp;&nbsp;<b>{{ sumS }}</b></p>
+                <br><br><br>
+                <table width="100%">
+                    <tbody><tr>
+                        <td colspan="2">Главный бухгалтер</td>
+                    </tr>
+                    <tr>
+                        <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 0px;"></div></td>
+                        <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 0px;"></div></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><br>Получил кассир</td>
+                    </tr>
+                    <tr>
+                        <td width="33%"><div style="border-bottom: 1px solid #000; margin: 20px 20px 0 0px;">{{ added_by }}</div></td>
+                        <td width="33%"><div style="border-bottom: 1px solid #000; margin: 40px 20px 0 0px;"></div></td>
+                    </tr>
+                    </tbody></table>
+            </div>
+        </td>
+    </tr>
+    </tbody></table>
+
+</body>
+</html>

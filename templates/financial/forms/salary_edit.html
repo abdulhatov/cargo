@@ -1,0 +1,283 @@
+{% extends 'extends/index.html' %}
+{% load static %}
+{% load formset_tags %}
+{% load widget_tweaks %}
+{% block css %}
+    <style>
+        table.c {
+            table-layout: auto;
+            width: 100%;
+            border: 1px solid #dee2e6;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+{% endblock %}
+
+{% block content_header %}
+    <div class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Редактирование зарплаты</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'financial:salary' %}">Список зарплат</a></li>
+                        <li class="breadcrumb-item active">Редактирование зарплаты</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <script type="text/javascript">
+        var url1 = "{% url "financial:salary_show_emp_edit_jx" %}";
+        var PK = {{ PK }};
+    </script>
+    <form method="POST">
+        <div class="card card-primary card-outline">
+            <div class="card-body">
+                <div class="row">
+                    {% csrf_token %}
+                    <div class="col-4"> <label> Валюта </label> {{ form.currency }} </div>
+                    <div class="col-4"> <label> Дата От </label> {{ form.dateFrom }} </div>
+                    <div class="col-4"> <label> Дата До </label> {{ form.dateTo }} </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-4"> <label> Цена - Досмотрщик </label> {{ form.inspection }} </div>
+                    <div class="col-4"> <label> Цена - Упаковщик </label> {{ form.packing }} </div>
+                    <div class="col-4"> <label> Цена - Погрузчик </label> {{ form.loading }} </div>
+                </div>
+
+            </div>
+            <div class="card-footer">
+                <input type="submit" class="btn btn-default" value="Показать" name="button1">
+            </div>
+        </div>
+
+        {% if currencyFormset|length %}
+            <div class="card card-primary card-outline">
+                <div class="card-body">
+                    <div id="idFormset" data-formset-prefix="{{ currencyFormset.prefix }}">
+                        {{ currencyFormset.media }}
+                        {{ currencyFormset.management_form }}
+                        <div data-formset-body>
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                <th>Валюта</th>
+                                <th>Курс</th>
+                                </thead>
+                                <tbody style="font-size: 90%">
+                                {% for form in currencyFormset %}
+                                    {% for hidden_field in form.hidden_fields %}
+                                        {{ hidden_field }}
+                                    {% endfor %}
+                                    <div data-formset-form>
+                                        <tr>
+                                            <td>
+                                                <div>{{ form.currency }}</div>
+                                                {{ form.currency.errors.as_ul }}
+                                            </td>
+                                            <td>
+                                                {{ form.curs }}
+                                                {{ form.curs.errors.as_ul }}
+                                            </td>
+                                        </tr>
+                                    </div>
+                                {% endfor %}
+
+                                {% for error in currencyFormset.errors %}
+                                    {% if error %}
+                                        <div class="text-danger">
+                                            <strong>{{ error|escape }}</strong>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <input type="submit" class="btn btn-default" value="Показать" name="button2">
+                </div>
+
+            </div>
+        {% endif %}
+
+        {% if formset %}
+            <div class="card card-primary card-outline">
+                <div class="card-body">
+                    <div id="idFormset" data-formset-prefix="{{ formset.prefix }}">
+                        {{ formset.media }}
+                        {{ formset.management_form }}
+                        <div data-formset-body>
+                            <table class="c" border="1">
+                                <thead>
+                                <th>ФИО</th>
+                                <th>долг (-) ,(+)</th>
+                                <th>оклад</th>
+                                <th>премии</th>
+                                <th>прочее</th>
+                                <th>проценты</th>
+                                <th>досм./упак./порг.</th>
+                                <th>Итого ЗП</th>
+                                <th>Авансы</th>
+                                <th>Штрафы</th>
+                                <th>Остаток</th>
+                                <th>Выдача</th>
+                                <th>итого</th>
+                                </thead>
+                                <tbody id="id_tbody">
+                                {% for form in formset %}
+
+                                    {% for hidden_field in form.hidden_fields %}
+                                        {{ hidden_field }}
+                                    {% endfor %}
+
+                                    <div data-formset-form>
+                                        <tr>
+                                            <td>
+                                                <div hidden="hidden">{{ form.employee }}</div>
+                                                {{ form.employee.errors.as_ul }}
+                                            </td>
+                                            <td>
+                                                {{ form.debt }}
+                                                {{ form.debt.errors.as_ul }}
+                                            </td>
+                                            <td>
+                                                {{ form.oklad }}
+                                                {{ form.oklad.errors.as_ul }}
+                                            </td>
+                                            <td>
+                                                {{ form.premiums }}
+                                                {{ form.premiums.errors.as_ul }}
+                                            </td>
+                                            <td>
+                                                {{ form.other }}
+                                                {{ form.other.errors.as_ul }}
+                                            </td>
+                                            <td>
+                                                {{ form.interest }}
+                                                {{ form.interest.errors.as_ul }}
+                                            </td>
+
+                                            <td style="text-align: center">
+                                                <div hidden="hidden"> {{ form.services }}</div>
+                                                {{ form.services.errors.as_ul }}
+                                                <i class="fa fa-eye" onclick="OpenModalEdit({{ form.employee.value }})"></i>
+                                            </td>
+                                            <td>
+                                                {{ form.totalSL }}
+                                                {{ form.totalSL.errors.as_ul }}
+                                            </td>
+
+                                            <td>
+                                                {{ form.advance }}
+                                                {{ form.advance.errors.as_ul }}
+                                            </td>
+                                            <td>
+                                                {{ form.fine }}
+                                                {{ form.fine.errors.as_ul }}
+                                            </td>
+                                            <td>
+                                                {{ form.remainder }}
+                                                {{ form.remainder.errors.as_ul }}
+                                            </td>
+                                            <td>
+                                                {{ form.issuance }}
+                                                {{ form.issuance.errors.as_ul }}
+                                            </td>
+                                            <td>
+                                                {{ form.total }}
+                                                {{ form.total.errors.as_ul }}
+                                            </td>
+                                        </tr>
+                                    </div>
+                                {% endfor %}
+
+                                {% for error in formset.errors %}
+                                    {% if error %}
+                                        <div class="text-danger">
+                                            <strong>{{ error|escape }}</strong>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <input type="submit" class="btn btn-success" value="Сохранить" name="button3">
+                </div>
+
+            </div>
+            </form>
+            <div class="modal fade" id="modal-lg">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h6 class="modal-title" align="center">Заработная плата сотрудника за осмотр, упаковку и погрузку</h6>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <p>Сотрудник: &nbsp;&nbsp;&nbsp;&nbsp;<B id="inf1"></B></p>
+                            <p>Дата: &nbsp;&nbsp;&nbsp;<B id="inf2"></B></p>
+
+                            <br>
+
+                            <table width="100%" border="1" style="font-size: 90%">
+                                <thead>
+                                <tr style="text-align: center">
+                                    <th>Страна</th>
+                                    <th>Досмотр</th>
+                                    <th>Упаковка</th>
+                                    <th>Погрузка</th>
+                                </tr>
+                                </thead>
+                                <tbody id="idBody">
+
+                                </tbody>
+                            </table>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        {% endif %}
+{% endblock %}
+
+
+{% block js %}
+    <script>
+        let length = document.getElementById('id_tbody').rows.length;
+        for(let i=0; i<length; i++)
+        {
+            let e = document.getElementById("id_salaryinner_set-" + i.toString() + "-employee")
+            let text = document.createTextNode(e.options[e.selectedIndex].text);
+            e.parentNode.parentNode.appendChild(text);
+
+            let e1 = document.getElementById("id_salaryinner_set-" + i.toString() + "-services")
+            let text1 = document.createTextNode(e1.value);
+            e1.parentNode.parentNode.prepend(text1);
+
+        }
+
+    </script>
+
+    <script src="{% static "js/financial/salary.js" %}"></script>
+
+{% endblock %}

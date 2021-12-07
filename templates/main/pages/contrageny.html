@@ -1,0 +1,85 @@
+{% extends base_template_name %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content_header %}
+
+    <div class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Список контрагентов</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item active">Список контрагентов</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <a href="{% url 'main:contrageny_add' %}"
+               class="btn btn-block btn-success" style="width: 100px;"> Добавить </a>
+
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-hover" style="font-size: 90%">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Полное имя</th>
+                    <th>Страна</th>
+                    <th>Телефон</th>
+                    <th>Адрес</th>
+                    <th>Рынок</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <form method="get">
+                        <td> {{ form.id|add_class:"form-control" }}</td>
+                        <td> {{ form.fullname|add_class:"form-control" }} </td>
+                        <td> {{ form.country|add_class:"form-control" }}</td>
+                        <td> {{ form.phone|add_class:"form-control" }}</td>
+                        <td> {{ form.address|add_class:"form-control" }}</td>
+                        <td> {{ form.store|add_class:"form-control" }}</td>
+                        <td align="center">
+                            <button class="btn btn-success" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </td>
+                    </form>
+                </tr>
+                {% for obj in page_obj %}
+                    <tr>
+                        <td> {{ obj.pk }}</td>
+                        <td> {{ obj.fullname }} </td>
+                        <td> {{ obj.country.name }}</td>
+                        <td> {% if obj.phone %}{{ obj.phone }}{% endif %}</td>
+                        <td> {% if obj.address %}{{ obj.address }}{% endif %}</td>
+                        <td> {% if obj.store %}{{ obj.store }}{% endif %}</td>
+
+                        <td align="center">
+                            <a href="{% url 'main:contragenty_edit' pk=obj.pk %}"> <i class="fa fa-edit"></i></a>
+                            &nbsp;
+                            <a class="confirm-delete"
+                               href="{% url 'main:delete_contragenty' pk=obj.pk %}">
+                                <i class="fa fa-trash-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% include 'paginator.html' %}
+    </div>
+{% endblock %}

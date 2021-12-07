@@ -1,0 +1,186 @@
+{% extends base_template_name %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content_header %}
+    <div class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Список операций</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item active">Список операций</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <div class="row">
+                <div class="btn-group col-auto">
+                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Приходник
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item" href="{% url 'financial:operations_in_client_add' %}"> <i class="fa fa-fw fa-plus-square"></i> Клиент</a>
+                        <a class="dropdown-item" href="{% url 'financial:operations_in_agent_add' %}"> <i class="fa fa-fw fa-plus-square"></i> Контрагент</a>
+                        <a class="dropdown-item" href="{% url 'financial:operations_in_various_add' %}"> <i class="fa fa-fw fa-plus-square"></i> Разное</a>
+                    </div>
+                </div>
+
+                <div class="btn-group col-auto">
+                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Расходник
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item" href="{% url 'financial:cons_employee_add' %}"> <i class="fa fa-fw fa-minus-square"></i> Сотруднику </a>
+                        <a class="dropdown-item" href="{% url 'financial:cons_agent_add' %}"> <i class="fa fa-fw fa-minus-square"></i> Контрагенту</a>
+                        <a class="dropdown-item" href="{% url 'financial:cons_agent_client_add' %}"> <i class="fa fa-fw fa-minus-square"></i> Контрагенту клиента</a>
+                        <a class="dropdown-item" href="{% url 'financial:cons_various_add' %}"> <i class="fa fa-fw fa-minus-square"></i> Разное</a>
+                    </div>
+                </div>
+                <div class="btn-group col-auto">
+                    {% if user.role == 4 %}
+                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Разное
+                    </button>
+                    {% endif %}
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item" href="{% url 'financial:cons_cash_moving_add' %}"> <i class="fa fa-fw fa-retweet"></i> Перемещение </a>
+                        <a class="dropdown-item" href="{% url 'financial:payroll_agent_add' %}"> <i class="fa fa-fw fa-object-group"></i> Платежная ведомость (Контрагенты)</a>
+                        <a class="dropdown-item" href="{% url 'financial:payroll_emp_add' %}"> <i class="fa fa-fw fa-object-group"></i> Платежная ведомость (Сотрудники)</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="simple_table" border="1">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Дата</th>
+                    <th>Касса</th>
+                    <th>Касса отправитель</th>
+                    <th>Тип операций</th>
+                    <th>Сумма</th>
+                    <th>Валюта </th>
+                    <th>Статья</th>
+                    <th></th>
+                </tr>
+
+                <tr>
+                    <form method="get">
+                        <td>{{ form.id|add_class:"form-control" }}</td>
+                        <td>{{ form.date|add_class:"form-control" }}</td>
+                        <td>{{ form.cash|add_class:"form-control" }}</td>
+                        <td>{{ form.cash_sender|add_class:"form-control" }}</td>
+                        <td>{{ form.type|add_class:"form-control" }}</td>
+                        <td>{{ form.sum|add_class:"form-control" }}</td>
+                        <td>{{ form.currency|add_class:"form-control" }}</td>
+                        <td>{{ form.article|add_class:"form-control" }}</td>
+
+                        <td align="center">
+                            <button class="btn btn-success" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </td>
+                    </form>
+                </tr>
+
+                </thead>
+                <tbody>
+
+
+
+                {% for ob in page_obj %}
+
+                    <tr>
+                        <td>{{ ob.pk }}</td>
+                        <td>{{ ob.date }}</td>
+                        <td>{{ ob.cash.name }}</td>
+                        <td>
+                            {% if ob.cash_sender %}
+                                {{ ob.cash_sender }}
+                            {% endif %}
+                        </td>
+                        <td>{{ ob.get_type_display }}</td>
+                        <td>{{ ob.sum }}</td>
+                        <td>{{ ob.currency.name }}</td>
+                        <td>{{ ob.article.name }}</td>
+                        <td>
+
+                            {% if ob.type == 1 %}
+                                <a href="{% url 'financial:operations_income_ID' ob.pk %}"> <i class="fa fa-eye"></i></a>
+                            {% elif ob.type == 2 %}
+                                <a href="{% url 'financial:operations_cons_ID' ob.pk %}"> <i class="fa fa-eye"></i></a>
+                            {% elif ob.type == 3 %}
+                                <a href="{% url 'financial:operations_payroll_ID' ob.pk %}"> <i class="fa fa-eye"></i></a>
+                            {% elif ob.type == 4%}
+                                <a href="{% url 'financial:cons_cash_moving_ID' ob.pk %}"> <i class="fa fa-eye"></i></a>
+                            {% endif %}
+                        {% if user.role != 4 %}
+
+                            {% if ob.type2 == 1 %}
+                                <a href="{% url 'financial:operations_in_client_edit' ob.pk %}">
+                                    <i class="fa fa-fw fa-edit"></i>
+                                </a>
+
+                            {% elif ob.type2 == 2 %}
+                                <a href="{% url 'financial:operations_in_agent_edit' ob.pk %}">
+                                    <i class="fa fa-fw fa-edit"></i>
+                                </a>
+
+                            {% elif ob.type2 == 3 %}
+                                <a href="{% url 'financial:operations_in_various_edit' ob.pk %}">
+                                    <i class="fa fa-fw fa-edit"></i> </a>
+
+                            {% elif ob.type2 == 4 %}
+                                <a href="{% url 'financial:cons_employee_edit' ob.pk %}">
+                                    <i class="fa fa-fw fa-edit"></i></a>
+
+                            {% elif ob.type2 == 5 %}
+                                <a href="{% url 'financial:cons_agent_edit' ob.pk %}">
+                                    <i class="fa fa-fw fa-edit"></i></a>
+
+                            {% elif ob.type2 == 6 %}
+                                <a href="{% url 'financial:cons_agent_client_edit' ob.pk %}">
+                                    <i class="fa fa-fw fa-edit"></i> </a>
+
+                            {% elif ob.type2 == 7 %}
+                                <a href="{% url 'financial:cons_various_print' ob.pk %}">
+                                    <i class="fa fa-fw fa-edit"></i> </a>
+
+                            {% elif ob.type2 == 8 %}
+                                <a href="{% url 'financial:ps_agent_edit' ob.pk %}">
+                                    <i class="fa fa-fw fa-edit"></i></a>
+
+                            {% elif ob.type2 == 9 %}
+                                <a href="{% url 'financial:ps_emp_edit' ob.pk %}">
+                                    <i class="fa fa-fw fa-edit"></i></a>
+
+                            {% elif ob.type2 == 10 %}
+                                <a href="{% url 'financial:cons_cash_moving_edit' ob.pk %}">
+                                    <i class="fa fa-fw fa-edit"></i></a>
+                            {% endif %}
+
+                            <a class="confirm-delete" href="{% url 'financial:operations_delete' ob.pk %}"> <i class="fa fa-trash-alt"></i></a>
+                        {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% include 'paginator.html' %}
+
+    </div>
+
+{% endblock %}

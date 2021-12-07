@@ -1,0 +1,157 @@
+{% extends base_template_name %}
+{% load static %}
+{% load widget_tweaks %}
+{% block css %}
+    <style>
+        table.c {
+            table-layout: auto;
+            width: 100%;
+            border: 1px solid #dee2e6;
+            font-size: 95%;
+            text-align: left;
+        }
+    </style>
+{% endblock %}
+
+{% block content_header %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Финансовый отчет</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item active">Финансовый отчет</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <script type="text/javascript">
+        let url="{% url 'financial:reports_article_js' %}";
+    </script>
+    <form method="get">
+        <div class="card card-primary card-outline">
+            <div class="card-body">
+                <br>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label> Рейсы </label>
+                        {{ filter.form.route|add_class:"form-control"}}
+                    </div>
+
+                    <div class="col-md-2">
+                        <label> Касса  </label>
+                        {{ filter.form.cash|attr:"multiple='multiple'"|add_class:"form-control" }}
+                    </div>
+
+                    <div class="col-md-7">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label> Валюта  </label>
+                                {{ filter.form.currency|add_class:"form-control select2" }}
+                            </div>
+                            <div class="col-md-3">
+                                <label> Тип операции  </label>
+                                 {{ filter.form.type|add_class:"form-control"|attr:"onchange=SetArticle();"}}
+                            </div>
+                            <div class="col-md-3">
+                                <label> Статья  </label>
+                                {{ filter.form.article|add_class:"form-control select2" }}
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-auto">
+                                <div class="input-group">
+                                    <label> Дата: &nbsp;</label> {{ filter.form.date|add_class:"form-control"}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <input type="submit" class="btn btn-default" value="Показать" name="search"/>
+            </div>
+
+        </div>
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+                <h3 class="card-title m-0"> Финансовый отчет </h3>
+            </div>
+            <div class="card-body">
+                <br>
+                <table class="c" border="1">
+                    <thead>
+                    <th>&nbsp;Дата</th>
+                    <th>&nbsp;Статья</th>
+                    <th>&nbsp;Приход</th>
+                    <th>&nbsp;Расход</th>
+                    </thead>
+                    <tbody>
+                    {% for ob in filter.qs %}
+                        <tr>
+                            <td>
+                                &nbsp;{{ ob.date }}
+                            </td>
+                            <td>&nbsp;
+                            {% if ob.type == 1 or ob.type == 2 or ob.type == 3 %}
+                                {{ ob.article.name}} (ID - {{ ob.pk }})
+                                {% if ob.route %}
+                                    ( RACE ID - {{ ob.route.idRoute }} - {{ ob.route.country_recipient.name }} )
+                                {% endif %}
+
+                            {% elif ob.type == 4 %}
+                                Перемещение денежных средств (из "{{ ob.cash.name }}" в "{{ ob.cash_sender.name }}")
+                            {% endif %}
+                                &nbsp;&nbsp;
+                                {% if ob.type == 1 %}
+                                <a href="{% url 'financial:operations_income_ID' ob.pk %}"> <i class="fa fa-eye"></i></a>
+                            {% elif ob.type == 2 %}
+                                <a href="{% url 'financial:operations_cons_ID' ob.pk %}"> <i class="fa fa-eye"></i></a>
+                            {% elif ob.type == 3 %}
+                                <a href="{% url 'financial:operations_payroll_ID' ob.pk %}"> <i class="fa fa-eye"></i></a>
+                            {% elif ob.type == 4%}
+                                <a href="{% url 'financial:cons_cash_moving_ID' ob.pk %}"> <i class="fa fa-eye"></i></a>
+                            {% endif %}
+
+                            </td>
+
+                            <td> &nbsp;
+                                {% if ob.type == 1 or ob.type == 4 %}
+                                {{ ob.sum }}
+                                {% endif %}
+                            </td>
+
+                            <td>&nbsp;
+                                {% if ob.type == 2 or ob.type == 3 %}
+                                {{ ob.sum }}
+                                {% endif %}
+                            </td>
+
+
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-success" name="print">
+                    <i class="fa fa-print"></i>&nbsp; Печать
+                </button>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+{% block js %}
+    <script>
+    $('#type_id option:eq({{ typeO }})').prop('selected', true);
+    </script>
+    <script src="{% static "js/financial/reports.js" %}"></script>
+{% endblock %}

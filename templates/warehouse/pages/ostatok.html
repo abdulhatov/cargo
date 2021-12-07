@@ -1,0 +1,68 @@
+{% extends base_template_name %}
+{% load widget_tweaks %}
+{% block content_header %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h4 class="m-0">Остаток в складах</h4>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'warehouse:list_warehouse' %}">Список складов</a></li>
+                        <li class="breadcrumb-item active">Остаток в складах</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+
+    <div class="card card-primary card-outline">
+        <div class="card-body align-center">
+                {% csrf_token %}
+                <div class="row col-5">
+                    <label> Склад </label>
+                    {{ form.warehouse|add_class:"form-control" }}
+                </div>
+                <br>
+                <button type="submit" class="btn btn-default"> Показать </button>
+
+        </div>
+    </div>
+    {% if WAREHOUSE %}
+        <div class="card card-primary card-outline">
+
+        <div class="card-header">
+                <h3 class="card-title m-0"> Склад "{{ wh_selected.title }}" </h3>
+                <button type="submit" class="btn btn-success float-right" name="print_button">
+                    <i class="fa fa-print"> </i>  Печать
+                </button>
+            </div>
+
+            <div class="card-body">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Наименование</th>
+                        <th>Количество</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for key, value in WAREHOUSE.items %}
+                        <tr>
+                            <td>{{ key }}</td>
+                            <td>{{ value }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+    </form>
+{% endblock %}

@@ -1,0 +1,200 @@
+{% extends 'extends/index.html' %}
+{% load static %}
+{% load bootstrap4 %}
+{% load formset_tags %}
+{% load widget_tweaks %}
+{% block content_header %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Редактирование рейса</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'route:list_route_url' %}">Рейсы</a></li>
+                        <li class="breadcrumb-item active">Редактирование рейса</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="card card-primary card-outline">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-3"> <label class="required">ID рейса</label> </div>
+                    <div class="col-3"> <label class="required"> Страна получатель</label> </div>
+                    <div class="col-4"> <label class="required"> Курс по отношению к сому </label> </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <b>{{ idRoute }}</b>
+                    </div>
+                    <div class="col-3">
+                        {{ form.country_recipient|add_class:"form-control select2" }}
+                        {{ form.country_recipient.errors.as_ul }}
+                    </div>
+                    <div class="col-3">
+                        {{ form.currency_Som|add_class:"form-control" }}
+                        {{ form.currency_Som.errors.as_ul }}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-3">
+                        <label class="required">Дата </label>
+                    </div>
+
+                    <div class="col-3">
+                        <label class="required">Местоположение </label>
+                    </div>
+
+                    <div class="col-4">
+                        <label class="required">Валюта страны получателя </label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-3">
+                        {{ form.date|add_class:"form-control" }}
+                        {{ form.date.errors.as_ul }}
+                    </div>
+
+                    <div class="col-3">
+                        {{ form.location|add_class:"form-control select2" }}
+                        {{ form.location.errors.as_ul }}
+                    </div>
+
+                    <div class="col-3">
+                        {{ form.currency_recipient|add_class:"form-control select2" }}
+                        {{ form.currency_recipient.errors.as_ul }}
+                    </div>
+                </div>
+
+                <br>
+                <div class="row">
+                    <div class="col-3">
+                        <label> Статус </label>
+                    </div>
+                    <div class="col-3">
+                        <label> Контрольный статус </label>
+                    </div>
+
+                    <div class="col-3">
+                        <label> Статус количества мест </label>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-4">
+                        {{ form.status|attr:"data-bootstrap-switch" }}
+                    </div>
+                    <div class="col-3">
+                        {{ form.control_status|attr:"data-bootstrap-switch" }}
+                    </div>
+
+                    <div class="col-3">
+                        {{ form.status_places|attr:"data-bootstrap-switch" }}
+                    </div>
+                </div>
+
+                <br>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label> Примечание </label>
+                        {{ form.note }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-primary card-outline">
+            <div id="formset" data-formset-prefix="{{ formset.prefix }}">
+                {{ formset.media }}
+                {{ formset.management_form }}
+
+                <div class="card-header">
+                    <h3 class="card-title m-0"> Список погрузчиков</h3>
+                    <input type="button" class="btn btn-success float-right" value="Добавить" data-formset-add>
+                </div>
+
+                <div class="card-body">
+                    <div data-formset-body>
+                        {% for form in formset %}
+                            {% for hidden_field in form.hidden_fields %}
+                                {{ hidden_field }}
+                            {% endfor %}
+                            <div data-formset-form>
+
+                                <div class="input-group">
+                                    {{ form.name|add_class:"select2 form-control" }}
+                                    {{ form.name.errors.as_ul }}
+                                    <span class="input-group-append">
+                                    <button type="button" class="btn btn-danger btn-flat" data-formset-delete-button>
+                                        <i class="fa fa-trash-alt"></i></button>
+                                    <div hidden="false">{{ form.DELETE }}</div>
+                                </span>
+                                </div>
+                                <br>
+                            </div>
+                        {% endfor %}
+                        {% for error in formset.errors %}
+                            {% if error %}
+                                <div class="alert alert-danger">
+                                    <strong>{{ error|escape }}</strong>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <script type="form-template" data-formset-empty-form>
+                        {% escapescript %}
+                            <div data-formset-form>
+                                {% for hidden_field in formset.empty_form.hidden_fields %}
+                                    {{ hidden_field }}
+                                {% endfor %}
+                                <div class="input-group">
+                                    {{ formset.empty_form.name |add_class:"select2 form-control" }}
+                                    {{ formset.empty_form.name.errors.as_ul }}
+                                    <span class="input-group-append">
+                                    <button type="button" class="btn btn-danger btn-flat" data-formset-delete-button>
+                                        <i class="fa fa-trash-alt"></i></button>
+                                    <div hidden="false">{{ formset.empty_form.DELETE }}</div>
+                                </span>
+                                </div>
+                                <br>
+                            </div>
+                        {% endescapescript %}
+                    </script>
+
+                    <script>
+                        jQuery(function ($) {
+                            $("#formset").formset({
+                                animateForms: true
+                            });
+                        });
+
+                        $('#formset').on('formAdded', function (event) {
+                            $('.select2').select2();
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-default card-outline">
+            <div class="card-body">
+                <input type="submit" class="btn btn-success" value="Сохранить">
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+

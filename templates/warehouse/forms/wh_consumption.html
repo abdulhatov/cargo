@@ -1,0 +1,204 @@
+{% extends base_template_name %}
+{% load static %}
+{% load formset_tags %}
+{% load widget_tweaks %}
+{% block content_header %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h3 class="m-0">{{ text }}</h3>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'warehouse:wh_operations' %}">Список операций </a></li>
+                        <li class="breadcrumb-item active">{{ text }}</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <script type="text/javascript">
+            var url = "{% url "warehouse:select_listName_url" %}";
+        </script>
+    <form method="post">
+
+
+        <div class="card card-primary card-outline">
+            <div class="card-body">
+                <div class="row">
+                    {% csrf_token %}
+                    <div class="col-4">
+                        <label class="required"> Дата </label>
+                        {{ form.date|add_class:"form-control" }}
+                    </div>
+                    <div class="col-4">
+                        <label class="required"> Cклад </label>
+                        {{ form.warehouse|add_class:"form-control select2" }}
+                    </div>
+                    <div class="col-4">
+                        <label class="required"> Статья в кассе </label>
+                        {{ form.wh_article|add_class:"form-control select2" }}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-4">
+                        <label class="required"> ID рейса </label>
+                        {{ form.route|add_class:"form-control select2" }}
+                    </div>
+                    <div class="col-4">
+                        <label> Клиент </label>
+                        {{ form.client|add_class:"form-control select2" }}
+                    </div>
+                </div>
+            </div>
+
+            {% for hidden_field in form.hidden_fields %}
+                    {{ hidden_field }}
+                {% endfor %}
+
+        </div>
+
+        <div class="card card-primary card-outline">
+            <div id="id_wHConsumptionFormSet" data-formset-prefix="{{ wHConsumptionFormSet.prefix }}">
+
+                <div class="card-header">
+                    <input type="button" data-formset-add class="btn btn-success float-right" value="Добавить">
+                </div>
+                <div class="card-body">
+
+                    {{ wHConsumptionFormSet.media }}
+                    {{ wHConsumptionFormSet.management_form }}
+
+                    <div class="row mb-md-4">
+                        <div class="col-3"><b class="required"> Категория </b></div>
+                        <div class="col-3"><b class="required"> Наименование </b></div>
+                        <div class="col-2"><b class="required"> Количество </b></div>
+                        <div class="col-3"><b class="required"> Цена </b></div>
+                        <div class="col-1"></div>
+                    </div>
+
+                    <div data-formset-body id="id_formset_body">
+                        {% for form in wHConsumptionFormSet %}
+                            {% for hidden_field in form.hidden_fields %}
+                                {{ hidden_field }}
+                            {% endfor %}
+                            <div data-formset-form>
+                                <div class="row">
+                                    <div class="col-3">
+                                        {{ form.category|add_class:"form-control select2" }}
+                                        {{ form.category.errors.as_ul }}
+                                    </div>
+                                    <div class="col-3">
+                                        {{ form.name|add_class:"form-control select2" }}
+                                        {{ form.name.errors.as_ul }}
+                                    </div>
+                                    <div class="col-2">
+                                        {{ form.sum|add_class:"form-control" }}
+                                        {{ form.sum.errors.as_ul }}
+                                    </div>
+                                    <div class="col-3">
+                                        {{ form.price|add_class:"form-control" }}
+                                        {{ form.price.errors.as_ul }}
+                                    </div>
+                                    <div class="col-1">
+                                        <button type="button"
+                                                class="btn btn-danger btn-flat delete_form">
+                                            <i class="fa fa-trash-alt"></i></button>
+                                        <div hidden="false">{{ form.DELETE }}</div>
+                                    </div>
+                                </div>
+                            <br>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <script type="form-template" data-formset-empty-form>
+                        {% escapescript %}
+                            <div data-formset-form>
+                                {% for hidden_field in wHConsumptionFormSet.empty_form.hidden_fields %}
+                                    {{ hidden_field }}
+                                {% endfor %}
+                                <div class="row">
+                                    <div class="col-3">
+                                        {{ wHConsumptionFormSet.empty_form.category|add_class:"form-control select2" }}
+                                        {{ wHConsumptionFormSet.empty_form.category.errors.as_ul }}
+                                    </div>
+
+                                    <div class="col-3">
+                                        {{ wHConsumptionFormSet.empty_form.name|add_class:"form-control select2" }}
+                                        {{ wHConsumptionFormSet.empty_form.name.errors.as_ul }}
+                                    </div>
+                                    <div class="col-2">
+                                        {{ wHConsumptionFormSet.empty_form.sum|add_class:"form-control" }}
+                                        {{ wHConsumptionFormSet.empty_form.sum.errors.as_ul }}
+                                    </div>
+                                    <div class="col-3">
+                                        {{ wHConsumptionFormSet.empty_form.price|add_class:"form-control" }}
+                                        {{ wHConsumptionFormSet.empty_form.price.errors.as_ul }}
+                                    </div>
+                                    <div class="col-1">
+                                        <button type="button" class="btn btn-danger btn-flat delete_form">
+                                            <i class="fa fa-trash-alt"></i></button>
+                                        <div hidden="false">{{ wHConsumptionFormSet.empty_form.DELETE }}</div>
+                                    </div>
+                                </div>
+                            <br>
+                            </div>
+                        {% endescapescript %}
+                    </script>
+
+                    <script>
+
+                        jQuery(function ($) {
+                            $("#id_wHConsumptionFormSet").formset({
+                                animateForms: true
+                            });
+                        });
+
+                        $('#id_wHConsumptionFormSet').on('formAdded', function (event) {
+                            $('.select2').select2();
+                        });
+
+                        jQuery(document).on('click', 'button.delete_form', function(event) {
+                            var totalForm = jQuery('#id_formset_body div[data-formset-form]:visible').length;
+                            if(totalForm > 1)
+                            {
+                                var defaultClass = jQuery(this).parent().parent().parent();
+                                defaultClass.attr('data-formset-form-deleted', true).hide();
+                                defaultClass.find('input[type="checkbox"').attr('checked', 'checked');
+                                controllerSumWarehouse();
+                            }
+                            else{
+                                alert('Вы должны отправить хотя бы одну форму');
+                            }
+                        });
+
+                    </script>
+                </div>
+
+
+                <div class="card-footer">
+                    <div class="row float-right">
+                        <div class="col-auto"><b>Количество:</b></div>
+                        <div class="col-auto">{{ form.sum|add_class:"form-control" }}</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <button type="submit" class="btn btn-success">Сохранить</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+{% block js %}
+     <script src="{% static "js/warehouse/warehouse_setListName.js" %}"></script>
+{% endblock %}

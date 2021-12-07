@@ -1,0 +1,162 @@
+{% extends base_template_name %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content_header %}
+
+    <div class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Отчет дебиторки</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item active">Отчет дебиторки</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <script type="text/javascript">
+        let url = "{% url "debits:routeCR_jx" %}";
+        let url2 = "{% url "debits:report_client_jx" %}";
+    </script>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="card card-primary card-outline">
+            <div class="card-body">
+
+                <div class="row">
+                    <div class="col-3">
+                        <label> Направление </label>
+                    </div>
+
+                    <div class="col-3">
+                        <label> Рейс </label>
+                    </div>
+                    <div class="col-3">
+                        <label> Контаргент  </label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-3">
+                        {{ form.direction|add_class:"form-control" }}
+                        {{ form.direction.errors.as_ul }}
+                    </div>
+
+                    <div class="col-3">
+                        {{ form.route|add_class:"form-control" }}
+                        {{ form.route.errors.as_ul  }}
+                    </div>
+                    <div class="col-3">
+                        {{ form.agent|add_class:"form-control" }}
+                        {{ form.agent.errors.as_ul }}
+                    </div>
+
+                    <div class="col-auto">
+                        {{ form.debt_all|attr:"data-bootstrap-switch"}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <input type="submit" class="btn btn-default" value="Показать" name="search"/>
+            </div>
+        </div>
+
+
+        {% if dict %}
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    <h3 class="card-title m-0"> Отчет </h3>
+                </div>
+                <div class="card-body">
+
+                    <table class="table table-striped table-bordered" style="text-align: center; font-size: 95%">
+
+                        <tr>
+                            <td><B>Код</B></td>
+                            <td><B>Получатель</B></td>
+                            <td><B>Рынок</B></td>
+                            <td><B>Контейнер</B></td>
+                            <td><B>Всего</B></td>
+                            <td><B>Приход</B></td>
+                            <td><B>Долг</B></td>
+                        </tr>
+
+                        {% for k, v in dict.items %}
+                            <tr>
+                                <td>{{ k.clientID }}</td>
+                                <td>{{ k.fullname }}
+                                <i class="fa fa-eye" onclick="OpenModal({{ k.pk }})"></i>
+                                </td>
+                                <td>{% if k.store %}{{ k.store }}{% endif %}</td>
+                                <td>
+                                    {% if k.container %}
+                                    {{ k.container }}
+                                    {% endif %}
+                                </td>
+                                <td>{{ v.0 }}</td>
+                                <td>{{ v.1 }}</td>
+                                <td></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success" name="print">
+                        <i class="fa fa-print"></i>&nbsp; Печать
+                    </button>
+                </div>
+            </div>
+        {% endif %}
+    </form>
+
+         <div class="modal fade" id="modal-lg">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h6 class="modal-title" align="center">Отчет</h6>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <p align="center">Получатель: &nbsp;&nbsp;&nbsp;&nbsp;<B id="inf1"></B></p>
+                            <table width="100%" border="1" style="font-size: 90%">
+                                <thead>
+                                <tr style="text-align: center">
+                                    <th>Рейс</th>
+                                    <th>Сумма</th>
+                                    <th>Разгузка</th>
+                                    <th>Приход</th>
+                                </tr>
+                                </thead>
+                                <tbody id="idBody">
+
+                                </tbody>
+                            </table>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+{% endblock %}
+
+{% block js %}
+    <script src="{% static "js/reports.js" %}"></script>
+{% endblock %}
+

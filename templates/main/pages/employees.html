@@ -1,0 +1,82 @@
+{% extends base_template_name %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content_header %}
+
+    <div class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Список сотрудников</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item active">Список сотрудников</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block content %}
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <a href="{% url 'main:employee_add' %}"
+               class="btn btn-block btn-success" style="width: 100px;"> Добавить </a>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-hover" style="font-size: 90%">
+                <thead>
+                <tr>
+                    <th>ID сотрудника</th>
+                    <th>Полное имя</th>
+                    <th>Должность</th>
+                    <th>Телефон</th>
+                    <th>Адрес</th>
+                    <th>Оклад</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <form method="get">
+                        <td> {{ form.employeeID|add_class:"form-control" }}</td>
+                        <td> {{ form.fullname|add_class:"form-control" }} </td>
+                        <td> {{ form.role|add_class:"form-control p-lg-0" }}</td>
+                        <td> {{ form.phone|add_class:"form-control" }}</td>
+                        <td> {{ form.address|add_class:"form-control" }}</td>
+                        <td> {{ form.salary|add_class:"form-control" }}</td>
+                        <td align="center">
+                            <button class="btn btn-success" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </td>
+                    </form>
+                </tr>
+                {% for employee in page_obj %}
+                    <tr>
+                        <td> {{ employee.employeeID }}</td>
+                        <td> {{ employee.fullname }} </td>
+                        <td> {{ employee.role.name }}</td>
+                        <td> {% if employee.phone %}{{ employee.phone }}{% endif %}</td>
+                        <td> {% if employee.address %}{{ employee.address }}{% endif %}</td>
+                        <td> {% if employee.salary %}{{ employee.salary }}{% endif %}</td>
+                        <td align="center">
+                            <a href="{% url 'main:employee_edit' pk=employee.pk %}"> <i class="fa fa-edit"></i></a>
+                            &nbsp;
+                            <a class="confirm-delete"
+                               href="{% url 'main:delete_employee' pk=employee.pk %}">
+                                <i class="fa fa-trash-alt"></i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% include 'paginator.html' %}
+    </div>
+{% endblock %}

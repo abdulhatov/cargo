@@ -1,0 +1,225 @@
+{% extends base_template_name %}
+{% load static %}
+{% load formset_tags %}
+{% load widget_tweaks %}
+{% block css %}
+    <script src="{% static "js/financial/income.js" %}"></script>
+{% endblock %}
+
+{% block content_header %}
+    <div class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">{{ text }}</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'financial:operations' %}">Список операций</a></li>
+                        <li class="breadcrumb-item active">{{ text }}</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <form method="POST">
+        <div class="card card-primary card-outline">
+            <div class="card-body">
+                <div class="row">
+                    {% csrf_token %}
+                <!--    <div class="col-4">
+                        <label class="required"> Дата </label>
+                        {{ form.date|add_class:"form-control" }}
+                    </div>  -->
+                    <div class="col-4">
+                        <label class="required"> Касса </label>
+                        {{ form.cash|add_class:"form-control select2"}}
+                    </div>
+                    <div class="col-4">
+                        <label class="required"> Валюта </label>
+                        {{ form.currency|add_class:"form-control select2" }}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-4">
+                        <label class="required"> Статья </label>
+                        {{ form.article|add_class:"form-control select2" }}
+                    </div>
+                    <div class="col-4">
+                        <label> Рейс </label>
+                        {{ form.route|add_class:"form-control select2" }}
+                    </div>
+                    <div class="col-4">
+                        <label class="required"> Контаргент </label>
+                        {{ form.agent|add_class:"form-control select2" }}
+                    </div>
+                </div>
+                <br>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label> Описание </label>
+                        {{ form.description }}
+                    </div>
+                </div>
+
+                {% for hidden_field in form.hidden_fields %}
+                    {{ hidden_field }}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="card card-primary card-outline">
+
+            <div id="formset" data-formset-prefix="{{ formset.prefix }}">
+                {{ formset.media }}
+                {{ formset.management_form }}
+                <div class="card-header">
+                    <div class="float-right">
+                        <input type="button" class="btn btn-success" value="Добавить" data-formset-add>
+                    </div>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-3"><b> Чек </b></div>
+                        <div class="col-3"><b> Рейс </b></div>
+                        <div class="col-2"><b> Сумма </b></div>
+                        <div class="col-3"><b class="required"> Статья </b></div>
+                        <div class="col-1"></div>
+                    </div>
+                    <br>
+
+                    <div data-formset-body id="id_formset_body">
+                        {% for form in formset %}
+                            {% for hidden_field in form.hidden_fields %}
+                                {{ hidden_field }}
+                            {% endfor %}
+                            <div data-formset-form>
+                                <div class="row">
+                                    <div class="col-3">
+                                        {{ form.check|add_class:"form-control" }}
+                                        {{ form.check.errors.as_ul }}
+                                    </div>
+
+                                    <div class="col-3">
+                                        {{ form.route|add_class:"form-control select2" }}
+                                        {{ form.route.errors.as_ul }}
+                                    </div>
+
+                                    <div class="col-2">
+                                        {{ form.sum|add_class:"form-control" }}
+                                        {{ form.sum.errors.as_ul }}
+                                    </div>
+
+                                    <div class="col-3">
+                                        {{ form.article|add_class:"form-control select2" }}
+                                        {{ form.article.errors.as_ul }}
+                                    </div>
+
+                                    <div class="col-1">
+                                        <button type="button" id="id_deleted_but"
+                                                class="btn btn-danger btn-flat delete_form">
+                                            <i class="fa fa-trash-alt"></i></button>
+                                        <div hidden="false">{{ form.DELETE }}</div>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <script type="form-template" data-formset-empty-form>
+                        {% escapescript %}
+                            <div data-formset-form>
+
+                                {% for hidden_field in formset.empty_form.hidden_fields %}
+                                    {{ hidden_field }}
+                                {% endfor %}
+                            <div class="row">
+                                    <div class="col-3">
+                                        {{ formset.empty_form.check|add_class:"form-control" }}
+                                        {{ formset.empty_form.check.errors.as_ul }}
+                                    </div>
+
+                                    <div class="col-3">
+                                        {{ formset.empty_form.route|add_class:"form-control select2" }}
+                                        {{ formset.empty_form.route.errors.as_ul }}
+                                    </div>
+
+                                    <div class="col-2">
+                                        {{ formset.empty_form.sum|add_class:"form-control" }}
+                                        {{ formset.empty_form.sum.errors.as_ul }}
+                                    </div>
+
+                                    <div class="col-3">
+                                        {{ formset.empty_form.article|add_class:"form-control select2" }}
+                                        {{ formset.empty_form.article.errors.as_ul }}
+                                    </div>
+
+                                    <div class="col-1">
+                                        <button type="button" id="id_deleted_but"
+                                                class="btn btn-danger btn-flat delete_form">
+
+                                            <i class="fa fa-trash-alt"></i></button>
+                                        <div hidden="false">{{ formset.empty_form.DELETE }}</div>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                        {% endescapescript %}
+                    </script>
+
+                    <script>
+                        jQuery(function ($) {
+                            $("#formset").formset({
+                                animateForms: true
+                            });
+                        });
+
+                        $('#formset').on('formAdded', function (event) {
+                            $('.select2').select2();
+                        });
+
+                        jQuery(document).on('click', 'button.delete_form', function(event) {
+                            var totalForm = jQuery('#id_formset_body div[data-formset-form]:visible').length;
+                            if(totalForm > 1)
+                            {
+                                var defaultClass = jQuery(this).parent().parent().parent();
+                                defaultClass.attr('data-formset-form-deleted', true).hide();
+                                defaultClass.find('input[type="checkbox"').attr('checked', 'checked');
+                            }
+                            else{
+                                alert('Вы должны отправить хотя бы одну форму');
+                            }
+                        });
+                    </script>
+                </div>
+                <div class="card-footer">
+                    <div class="row float-right">
+                        <div class="col-auto"><b>Сумма:</b></div>
+                        <div class="col-auto">{{ form.sum|add_class:"form-control" }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <button type="submit" class="btn btn-success"> Сохранить </button>
+            </div>
+        </div>
+
+    </form>
+    <script>
+        $('#summernote').summernote()
+    </script>
+{% endblock %}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>spat cargo</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'dist/css/style.css' %}">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{% static 'https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css' %}">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
+    <meta charset="UTF-8">
+    <style>
+        table {
+            background-color: transparent;
+        }
+
+        table {
+            border-spacing: 0;
+            border-collapse: collapse;
+        }
+        body{
+            font-size: 90%;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        table.c {
+            table-layout: auto;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+<table width="100%" style="font-size: 14px;">
+    <tr><td align="center"><b>ОсОО "SapatCargo"</b></td></tr>
+    <tr><td style="height: 20px;"> </td></tr>
+    <tr><td align="center">Квитанция<br>
+        к приходному кассовому ордеру<BR>
+        №{{ obj.pk }} от {{ obj.date|date:"c" }}</td></tr>
+    <tr><td></td></tr>
+    <tr><td><BR>Принято от: ({{ obj.agent.pk }}) {{ obj.agent.fullname }} </td></tr>
+    <tr><td style="height: 20px;"> </td></tr>
+    <tr><td>Основание: {{ obj.wh_article.name }}</td></tr>
+    <tr><td style="height: 20px;"> </td></tr>
+
+    {% for ob in obj_inner %}
+        <tr>
+            <td>
+
+                {% if ob.route %}
+                    {{ ob.route.pk }} ({{ ob.route.country_recipient.name }})
+                {% endif %}
+                *{{ ob.client.pk }}*
+                {{ ob.sum }}
+            </td>
+        </tr>
+    {% endfor %}
+    <tr><td style="height: 20px;"></td></tr>
+    <tr><td>Сумма итого: <b>{{ obj.sum }} {{ obj.currency.name }}</b></td></tr>
+    <tr><td style="height: 20px;"> </td></tr>
+    <tr><td>Получил кассир: {{ obj.added_by.first_name }}&nbsp;{{ obj.added_by.last_name }}</td></tr>
+    <tr><td style="height: 20px;"> </td></tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>spat cargo</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'dist/css/style.css' %}">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{% static 'https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css' %}">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+    <!-- JQVMap -->
+    <link rel="stylesheet" href="{% static 'plugins/jqvmap/jqvmap.min.css' %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %}">
+    <!-- summernote -->
+    <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css' %}">
+    <!--datatable-->
+
+    <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/select2/css/select2.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css' %}">
+    <!-- CodeMirror -->
+    <link rel="stylesheet" href="{% static 'plugins/codemirror/codemirror.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/codemirror/theme/monokai.css' %}">
+    <!-- SimpleMDE -->
+    <link rel="stylesheet" href="{% static 'plugins/simplemde/simplemde.min.css' %}">
+
+    <meta charset="UTF-8">
+    <style>
+        div.FS {
+            font-size: 15px;
+            font-family: "Times New Roman", Times, serif; }
+
+        table{
+            table-layout: fixed;}
+
+    </style>
+
+</head>
+<body>
+<h5 style="text-align: center"> SapatCargo - Просмотр перемещения в складе </h5>
+<p style="text-align: right;">от {{ date }}</p>
+                <center><h4>Накладная №{{ id }}</h4></center>
+                <p>Кому: <b>{{ to_the_warehouse }}</b></p>
+                <p>От кого: <b>{{ from_warehouse }}</b></p>
+
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Наименование</th>
+                        <th>Ед. изм.</th>
+                        <th>Кол-во.</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                      {% for w in whInner %}
+                        <tr>
+                            <td>{{ w.id }}</td>
+                            <td>{{ w.name }}</td>
+                            <td>{{ w.category }}</td>
+                            <td>{{ w.sum }}</td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+
+                <br><br><br><br>
+
+                <table width="100%">
+                    <tbody><tr>
+                        <td width="20%" align="right" style="padding-right: 10px;">Отпустил:</td>
+                        <td width="40%"><div style="border-bottom:1px solid #000;"></div></td>
+                        <td width="20%"></td>
+                        <td width="20%"><div style="border-bottom:1px solid #000;"></div></td>
+                    </tr>
+                    <tr>
+                        <td width="20%"></td>
+                        <td width="40%" align="center"><div style="font-size: 11px;">ФИО</div></td>
+                        <td width="20%"></td>
+                        <td width="20%" align="center"><div style="font-size: 11px;">Подпись</div></td>
+                    </tr>
+                </tbody></table>
+
+                <br><br>
+
+                <table width="100%">
+                    <tbody><tr>
+                        <td width="20%" align="right" style="padding-right: 10px;">Принял:</td>
+                        <td width="40%"><div style="border-bottom:1px solid #000;"></div></td>
+                        <td width="20%"></td>
+                        <td width="20%"><div style="border-bottom:1px solid #000;"></div></td>
+                    </tr>
+                    <tr>
+                        <td width="20%"></td>
+                        <td width="40%" align="center"><div style="font-size: 11px;">ФИО</div></td>
+                        <td width="20%"></td>
+                        <td width="20%" align="center"><div style="font-size: 11px;">Подпись</div></td>
+                    </tr>
+                </tbody>
+                </table>
+</body>
+</html>

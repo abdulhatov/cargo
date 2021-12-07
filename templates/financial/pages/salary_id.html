@@ -1,0 +1,162 @@
+{% extends 'extends/index.html' %}
+{% load static %}
+{% load formset_tags %}
+{% load widget_tweaks %}
+{% block css %}
+    <style>
+        table.c {
+            table-layout: auto;
+            border: 1px solid black;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+{% endblock %}
+
+{% block content_header %}
+    <div class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Просмотр зарплаты</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'financial:salary' %}">Список зарплат</a></li>
+                        <li class="breadcrumb-item active">Просмотр зарплаты</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <script type="text/javascript">
+        var url1 = "{% url "financial:salary_show_emp_edit_jx" %}";
+        var PK = {{ salary.pk }};
+    </script>
+
+    <div class="card card-primary card-outline">
+        <div class="card-body">
+
+            <h6 class="text-center"> Заработная плата </h6>
+
+            {% if currency %}
+                <br>
+                <table class="c" border="1" width="50%">
+                    <thead>
+                    <th>Валюта</th>
+                    <th>Курс</th>
+                    </thead>
+                    <tbody style="font-size: 90%">
+                    {% for c in currency %}
+                        <tr>
+                            <td>
+                                {{ c.currency.name }}
+                            </td>
+                            <td>
+                                {{ c.curs }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <br>
+            {% endif %}
+
+            {% if inner %}
+                <h6 class="text-center"> c&nbsp;{{ salary.dateFrom }}&nbsp;по&nbsp;{{ salary.dateTo }} </h6>
+
+                <table class="c" border="1" width="100%">
+                    <thead>
+                    <th>ФИО</th>
+                    <th>долг (-) ,(+)</th>
+                    <th>оклад</th>
+                    <th>премии</th>
+                    <th>прочее</th>
+                    <th>проценты</th>
+                    <th>досм./упак./порг.</th>
+                    <th>Итого ЗП</th>
+                    <th>Авансы</th>
+                    <th>Штрафы</th>
+                    <th>Остаток</th>
+                    <th>Выдача</th>
+                    <th>итого</th>
+                    </thead>
+                    <tbody id="id_tbody">
+                    {% for i in inner %}
+                        <tr>
+                            <td> {{ i.employee.fullname }} </td>
+                            <td> {{ i.debt }} </td>
+                            <td> {{ i.oklad }} </td>
+                            <td> {{ i.premiums }} </td>
+                            <td> {{ i.other }} </td>
+                            <td> {{ i.interest }} </td>
+                            <td>
+                                {{ i.services }}
+                            <i class="fa fa-eye" onclick="OpenModalEdit({{ i.employee.pk }})"></i>
+                            </td>
+                            <td> {{ i.totalSL }} </td>
+                            <td> {{ i.advance }} </td>
+                            <td> {{ i.fine }} </td>
+                            <td> {{ i.remainder }} </td>
+                            <td> {{ i.issuance }} </td>
+                            <td> {{ i.total }} </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+                <div class="card-footer">
+                <a class="btn btn-success" href="{% url 'financial:salary_print' salary.pk %}">
+                    <i class="fa fa-fw fa-print"></i> Печать
+                </a>
+                </div>
+
+                </div>
+                <div class="modal fade" id="modal-lg">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h6 class="modal-title" align="center">Заработная плата сотрудника за осмотр, упаковку и погрузку</h6>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <div class="modal-body">
+                                <p>Сотрудник: &nbsp;&nbsp;&nbsp;&nbsp;<B id="inf1"></B></p>
+                                <p>Дата: &nbsp;&nbsp;&nbsp;<B id="inf2"></B></p>
+
+                                <br>
+
+                                <table width="100%" border="1" style="font-size: 90%">
+                                    <thead>
+                                    <tr style="text-align: center">
+                                        <th>Страна</th>
+                                        <th>Досмотр</th>
+                                        <th>Упаковка</th>
+                                        <th>Погрузка</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="idBody">
+
+                                    </tbody>
+                                </table>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            {% endif %}
+{% endblock %}
+
+
+{% block js %}
+    <script src="{% static "js/financial/salary.js" %}"></script>
+{% endblock %}

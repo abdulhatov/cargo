@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>spat cargo</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'dist/css/style.css' %}">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{% static 'https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css' %}">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
+    <meta charset="UTF-8">
+    <style>
+        table {
+            background-color: transparent;
+        }
+
+        table {
+            border-spacing: 0;
+            border-collapse: collapse;
+        }
+        body{
+            font-size: 90%;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        table.c {
+            table-layout: auto;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+<table border="1" width="100%" style="text-align: center; font-size: 96%">
+    <tr>
+        <td colspan="2">{{ inf1 }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <table border="1" width="100%">
+                <tr>
+                    <td valign="top">
+                        <table border="1" width="100%">
+                            <tr>
+                                <td><B>№</B></td>
+                                <td><B>дата</B></td>
+                                <td><B>вес (кг.)</B></td>
+                                <td><B>количество</B></td>
+                                <td><B>долг за рейс</B></td>
+                            </tr>
+                            <tr>
+                                <td align="right" colspan="4">на начало &nbsp; </td>
+                                <td>{{ beginning }}</td>
+                            </tr>
+
+                            {% for k, v in dict.items %}
+                                <tr>
+                                    <td>{{ v.0 }}</td>
+                                    <td>{{ v.1 }}</td>
+                                    <td>{{ v.2 }}</td>
+                                    <td>{{ v.3 }}</td>
+                                    <td>{{ v.4 }}</td>
+                                </tr>
+                            {% endfor %}
+
+                            <tr style="font-weight: bold">
+
+                                <td align="right" colspan="2">Итого:</td>
+                                <td>{{ total1.0 }}</td>
+                                <td>{{ total1.1 }}</td>
+                                <td>{{ total1.2 }}</td>
+                            </tr>
+
+                        </table>
+                    </td>
+                    <td valign="top">
+                        <table border="1" width="100%">
+                            <tr>
+                                <td><B>ID приходника</B></td>
+                                <td><B>Рейс</B></td>
+                                <td><B>погашение</B></td>
+                                <td><B>дата</B></td>
+                            </tr>
+                            {% for i in income %}
+                                <tr>
+                                    <td>{{ i.0 }}</td>
+                                    <td>
+                                        {{ i.1 }}
+                                    </td>
+                                    <td>{{ i.2 }}</td>
+                                    <td>{{ i.3 }}</td>
+                                </tr>
+                            {% endfor %}
+                            <tr>
+                                <td colspan="2" align="right"><b>Итого:</b></td>
+                                <td><b>{{ total2 }}</b></td>
+                                <td></td>
+
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td align="right"><b>Остаток долг:</b></td>
+        <td><b>{{ remainder_debt }}</b></td>
+    </tr>
+</table>
+
+</body>
+</html>

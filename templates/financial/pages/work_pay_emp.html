@@ -1,0 +1,71 @@
+{% extends 'extends/index.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content_header %}
+
+    <div class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h4 class="m-0">Просмотр сдельной оплаты сотрудника</h4>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Главная</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'financial:work_pay' %}">Сдельная оплата</a></li>
+                        <li class="breadcrumb-item active">Просмотр</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block content %}
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <h3 class="card-title m-0">  </h3>
+        </div>
+        <div class="card-body">
+
+            <p>Сотрудник: &nbsp;&nbsp;&nbsp;&nbsp;<B>({{ employee.pk }}) {{ employee.fullname }} {% if employee.phone %}, {{ employee.phone }} {% endif %}</B></p>
+
+            <p>Дата: &nbsp;&nbsp;&nbsp;<b>{{ date }}</b></p>
+            <br>
+            <table class="table table-striped table-bordered">
+                <thead>
+                <th>№</th>
+                <th>Акт</th>
+                <th>Итого</th>
+                </thead>
+                <tbody>
+                {% for ob in obj %}
+                    <tr>
+                        <td>
+                            {{ ob.0 }}
+                        </td>
+                        <td>
+                            {{ ob.1 }} &nbsp; <a href="{% url 'route:edit_rt' ob.3 %}"><i class="fa fa-eye"></i></a>
+                        </td>
+                        <td>
+                            {{ ob.2 }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="2" style="text-align: right"> Итого:</td>
+                    <td><b>{{ total }}</b></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-success" name="print">
+                <i class="fa fa-print"></i>&nbsp; Печать
+            </button>
+        </div>
+    </div>
+
+{% endblock %}
